@@ -14,7 +14,7 @@ export const Container = styled.div`
 `;
 
 export const StyledInput = styled.input.attrs({
-    type: 'text',
+  type: 'text',
 })`
   border: none;
   outline: none;
