@@ -1,17 +1,31 @@
-import React from 'react'
-import { NavbarContainer } from './style'
-import LogoImg from '@public/logo-udemy.svg'
+import React from 'react';
+import { NavbarContainer, LogoContainer, Title } from './style';
+import Logo from '@public/logo-udemy.svg';
+import LogoLight from '@public/logo-udemy-light.svg';
+import SearchBar from '@components/SearchBar';
+import Video from '@api.video/nodejs-client/lib/model/Video';
 
-const Navbar: React.FC = (): JSX.Element => {
-    console.log(LogoImg)
-    return (
-        <NavbarContainer>
-            <LogoImg />
-           
-            hi
-        </NavbarContainer>
-    )
-
+interface NavbarProps {
+  videoMode?: boolean;
+  video?: Video;
 }
 
-export default Navbar
+const Navbar: React.FC<NavbarProps> = ({ videoMode, video }): JSX.Element => {
+  return (
+    <NavbarContainer videoMode={videoMode}>
+      <LogoContainer href={'/'}>
+        {videoMode ? <LogoLight /> : <Logo />}
+      </LogoContainer>
+      {videoMode ? (
+        <Title>{video?.title}</Title>
+      ) : (
+        <>
+          <span>Categories</span>
+          <SearchBar />
+        </>
+      )}
+    </NavbarContainer>
+  );
+};
+
+export default Navbar;

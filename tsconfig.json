@@ -26,23 +26,11 @@
       "@public/*": [
         "public/*"
       ],
-      "@modules/*": [
-        "src/modules/*"
-      ],
       "@components/*": [
         "src/components/*"
       ],
       "@utils/*": [
         "src/utils/*"
-      ],
-      "@api/*": [
-        "src/pages/api/*"
-      ],
-      "@theme/*": [
-        "src/theme/*"
-      ],
-      "@dashboard_types/*": [
-        "src/types/*"
       ]
     },
     "incremental": true
@@ -54,7 +42,6 @@
     "**/**/*.tsx"
   ],
   "exclude": [
-    "node_modules",
-    "stories"
+    "node_modules"
   ]
 }
