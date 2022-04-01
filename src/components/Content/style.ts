@@ -2,13 +2,18 @@ import styled from 'styled-components';
 
 export const ContentContainer = styled.div`
   font-family: 'Roboto', sans-serif;
-  margin: 0 50px 0 50px;
+  @media (min-width: 980px) {
+    margin: 0 50px 0 50px;
+  }
 `;
 
 export const BannerContainer = styled.div`
   position: relative;
-  max-width: 1340px;
-  margin: 0 auto 40px auto;
+  margin-bottom: 50px;
+`;
+
+export const StyledImg = styled.img`
+  width: -webkit-fill-available;
 `;
 
 export const TextBox = styled.div`
@@ -20,12 +25,14 @@ export const TextBox = styled.div`
     margin: 0;
   }
   background-color: white;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 8%), 0 4px 12px rgb(0 0 0 / 8%);
-  position: absolute;
-  top: 24px;
-  left: 44px;
   padding: 24px;
-  max-width: 400px;
+  @media (min-width: 700px) {
+    max-width: 400px;
+    position: absolute;
+    top: 24px;
+    left: 44px;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 8%), 0 4px 12px rgb(0 0 0 / 8%);
+  }
 `;
 
 export const SelectionContainer = styled.div`

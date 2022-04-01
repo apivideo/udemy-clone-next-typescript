@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@api.video/nodejs-client": "^2.2.4",
-    "@api.video/player-sdk": "^1.2.12",
+    "@api.video/player-sdk": "^1.2.13",
     "@radix-ui/react-tabs": "^0.1.5",
     "@types/jest": "^27.4.1",
     "@types/react-dom": "^17.0.13",

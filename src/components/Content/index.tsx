@@ -7,7 +7,8 @@ import {
     TextBox,
     SelectionContainer,
     ItemsContainer,
-    ContentTitle
+    ContentTitle,
+    StyledImg
 } from './style';
 
 interface ContentProps {
@@ -15,21 +16,22 @@ interface ContentProps {
 }
 
 const Content: React.FC<ContentProps> = ({ videos }): JSX.Element => {
+
     return (
         <div>
             <ContentContainer>
                 <BannerContainer>
-                    <img src={'/udemy-banner.jpeg'} alt={'banner'} />
+                    <StyledImg src={'/udemy-banner.jpeg'} alt={'banner'} />
                     <TextBox>
-                        <h1>Get there. From here.</h1>
+                        <h1>Learning that gets you</h1>
                         <p>
-                            Chart your path to success. Log in for limited-time savings on the
-                            latest topics.
-          </p>
+                        Skills for your present (and your future). Get started with us.
+            </p>
                     </TextBox>
                 </BannerContainer>
             </ContentContainer>
             <SelectionContainer>
+
                 <ContentTitle>Let's start learning, Aya</ContentTitle>
 
                 <ItemsContainer>
