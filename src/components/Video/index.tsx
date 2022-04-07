@@ -10,16 +10,22 @@ import {
   TabsContent,
   OverviewTitle,
   ActionsContainer,
-  IconBtn,
+  ActionBtn,
   NotesContent,
+  SidebarContainer,
+  SidebarTitle,
+  IconBtn,
+  VideoAndTabsContainer
 } from './style';
 import { PlayerSdk } from '@api.video/player-sdk';
 import { getSecondsToHours, getMinutesFormat } from '@utils/functions';
 import { MdEditNote } from 'react-icons/md';
 import { BsFillFileEarmarkTextFill } from 'react-icons/bs';
+import { IoCloseOutline } from 'react-icons/io5';
 import Notes from './Notes';
+import { useAuthContext } from '@components/Providers/Auth';
 
-interface VideoPageProps {}
+interface VideoPageProps { }
 
 const tabNames = {
   OVERVIEW: 'Overview',
@@ -31,7 +37,7 @@ export interface Timestamp {
   seconds: number;
 }
 
-const VideoPage: React.FC<VideoPageProps> = ({}): JSX.Element => {
+const VideoPage: React.FC<VideoPageProps> = ({ }): JSX.Element => {
   const router = useRouter();
   const videoId = router?.query?.videoId;
   const [video, setVideo] = useState<Video>(null);
@@ -42,6 +48,63 @@ const VideoPage: React.FC<VideoPageProps> = ({}): JSX.Element => {
     minutesFormat: '00:00',
     seconds: 0,
   });
+  const [openSidebar, setOpenSidebar] = useState<boolean>(false);
+  const [conversationId, setConversationId] = useState<string>('')
+  const { state } = useAuthContext()
+
+  useEffect(() => {
+    if (playerSdk) {
+      // In this EventListener we can activate our player SDK methods when the player is ready to use
+      playerSdk.addEventListener('ready', () => {
+        setPlayerTheme();
+        getDuration();
+        playerSdk.hideControls(['more']);
+      });
+
+      // Listen to the player's timestamp for notes
+      // @ts-ignore: Unreachable code error
+      playerSdk.addEventListener('timeupdate', ({ currentTime }) => {
+        setCurrTimestamp({
+          minutesFormat: getMinutesFormat(currentTime),
+          seconds: currentTime,
+        });
+      });
+    }
+  }, [playerSdk]);
+
+  useEffect(() => {
+    if (videoId) {
+      getVideoId();
+    }
+  }, [videoId]);
+
+  useEffect(() => {
+    if (video) {
+      //When video ready, get conversationId
+      // getConversationId()
+      videoSdk();
+    }
+  }, [video]);
+
+  useEffect(() => {
+    //When we have conversationId, get summary, transcription and topics
+    if (conversationId) {
+      console.log({ conversationId })
+      // getSummary()
+      // getTranscription()
+      // getTopics()
+    }
+  }, [conversationId])
+
+  const setPlayerTheme = () => {
+    playerSdk.setTheme({
+      trackUnplayed: '#6a6f73ff',
+      trackPlayed: '#a435f0ff',
+      trackBackground: '#a435f0ff',
+      link: '#d1d7dcff',
+      linkActive: '#000'
+    });
+  }
 
   const getVideoId = async () => {
     const response = await fetch(`/api/video`, {
@@ -52,18 +115,6 @@ const VideoPage: React.FC<VideoPageProps> = ({}): JSX.Element => {
     const data = await response.json();
     setVideo(data);
   };
-
-  useEffect(() => {
-    if (videoId) {
-      getVideoId();
-    }
-  }, [videoId]);
-
-  useEffect(() => {
-    if (video) {
-      videoSdk();
-    }
-  }, [video]);
 
   const videoSdk = async () => {
     try {
@@ -77,27 +128,60 @@ const VideoPage: React.FC<VideoPageProps> = ({}): JSX.Element => {
     }
   };
 
-  useEffect(() => {
-    if (playerSdk) {
-      // In this EventListener we can activate our player SDK methods when the player is ready to use
-      playerSdk.addEventListener('ready', () => {
-        getDuration();
-        playerSdk.hideControls(['more']);
-      });
+  const getConversationId = async () => {
+    const response = await fetch('/api/get-conversation-id', {
+      method: 'Post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ videoUrl: video.assets.mp4, accessToken: state.accessToken }),
+    });
+    const data = await response.json();
+    setConversationId(data.conversationId)
+  }
 
-      // Listen to the player's timestamp for notes
-      playerSdk.addEventListener('timeupdate', ({ currentTime }) => {
-        setCurrTimestamp({
-          minutesFormat: getMinutesFormat(currentTime),
-          seconds: currentTime,
-        });
-      });
-    }
-  }, [playerSdk]);
+
+  const getSummary = async () => {
+    const response = await fetch(`/api/${conversationId}/get-summary`, {
+      method: 'Get',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${state.accessToken}`
+      },
+    });
+    const data = await response.json();
+    console.log('summary', data)
+  }
+
+  const getTranscription = async () => {
+    const response = await fetch(`/api/${conversationId}/get-speech-to-text`, {
+      method: 'Get',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${state.accessToken}`
+      },
+    });
+    const data = await response.json();
+    console.log('transcription', data)
+  }
+
+  const getTopics = async () => {
+    const response = await fetch(`/api/${conversationId}/get-topics`, {
+      method: 'Get',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${state.accessToken}`
+      },
+    });
+    const data = await response.json();
+    console.log('topics', data)
+  }
 
   const getDuration = async () => {
     const duration = await playerSdk.getDuration();
     setVideoDuration(getSecondsToHours(duration));
+  };
+
+  const handleTranscript = () => {
+    setOpenSidebar(true);
   };
 
   return (
@@ -106,42 +190,60 @@ const VideoPage: React.FC<VideoPageProps> = ({}): JSX.Element => {
         <>
           <Navbar videoMode video={video} />
           <Container>
-            <iframe
-              width="100%"
-              id={'myVideo'}
-              height="600px"
-              allowFullScreen
-              style={{ border: 0 }}
-            ></iframe>
-            <ActionsContainer>
-              <IconBtn onClick={() => setCurrTab(tabNames.NOTES)}>
-                <MdEditNote size={'1.4rem'} />
-              </IconBtn>
-              <IconBtn>
-                <BsFillFileEarmarkTextFill size={'1.4rem'} />
-              </IconBtn>
-            </ActionsContainer>
-            <TabsContainer
-              defaultValue={tabNames.OVERVIEW}
-              onValueChange={(e) => setCurrTab(e)}
-              value={currTab}
-            >
-              <TabsList aria-label="Manage your account">
-                <TabsTrigger value={tabNames.OVERVIEW}>
-                  {tabNames.OVERVIEW}
-                </TabsTrigger>
-                <TabsTrigger value={tabNames.NOTES}>
-                  {tabNames.NOTES}
-                </TabsTrigger>
-              </TabsList>
-              <TabsContent value={tabNames.OVERVIEW}>
-                <OverviewTitle>About this course</OverviewTitle>
-                {`Duration: ${videoDuration && videoDuration} hours`}
-              </TabsContent>
-              <NotesContent value={tabNames.NOTES}>
-                <Notes playerSdk={playerSdk} currTimestamp={currTimestamp} />
-              </NotesContent>
-            </TabsContainer>
+            <VideoAndTabsContainer>
+              <iframe
+                width="100%"
+                id={'myVideo'}
+                height="600px"
+                allowFullScreen
+                style={{ border: 0 }}
+              ></iframe>
+
+
+              <ActionsContainer>
+                <ActionBtn onClick={() => setCurrTab(tabNames.NOTES)}>
+                  <MdEditNote size={'2rem'} />
+                </ActionBtn>
+                <ActionBtn>
+                  <BsFillFileEarmarkTextFill
+                    size={'2rem'}
+                    onClick={handleTranscript}
+                  />
+                </ActionBtn>
+              </ActionsContainer>
+              <TabsContainer
+                defaultValue={tabNames.OVERVIEW}
+                onValueChange={(e) => setCurrTab(e)}
+                value={currTab}
+              >
+                <TabsList aria-label="Manage your account">
+                  <TabsTrigger value={tabNames.OVERVIEW}>
+                    {tabNames.OVERVIEW}
+                  </TabsTrigger>
+                  <TabsTrigger value={tabNames.NOTES}>
+                    {tabNames.NOTES}
+                  </TabsTrigger>
+                </TabsList>
+                <TabsContent value={tabNames.OVERVIEW}>
+                  <OverviewTitle>About this course</OverviewTitle>
+                  {`Duration: ${videoDuration && videoDuration} hours`}
+                </TabsContent>
+                <NotesContent value={tabNames.NOTES}>
+                  <Notes playerSdk={playerSdk} currTimestamp={currTimestamp} />
+                </NotesContent>
+              </TabsContainer>
+            </VideoAndTabsContainer>
+            {openSidebar && (
+              <SidebarContainer>
+                <SidebarTitle>
+                  Transcript{' '}
+                  <IconBtn onClick={() => setOpenSidebar(false)}>
+                    <IoCloseOutline size={'1.5rem'} />
+                  </IconBtn>
+                </SidebarTitle>
+                  Transcript here
+              </SidebarContainer>
+            )}
           </Container>
         </>
       )}

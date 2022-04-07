@@ -3,14 +3,16 @@ import * as TabsPrimitive from '@radix-ui/react-tabs';
 
 export const Container = styled.div`
   margin-bottom: 100px;
+  display: flex;
+  font-family: 'Roboto', sans-serif;
 `;
 
 export const TabsContainer = styled(TabsPrimitive.Root)`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 0 50px;
-  width: 100%;
+    width: 80%;
+    margin: 0 auto;
 `;
 
 export const TabsList = styled(TabsPrimitive.List)`
@@ -76,7 +78,7 @@ export const ActionsContainer = styled.div`
   gap: 8px;
 `;
 
-export const IconBtn = styled.button`
+export const ActionBtn = styled.button`
   cursor: pointer;
   border: none;
   height: 40px;
@@ -95,3 +97,36 @@ export const NotesContent = styled(TabsPrimitive.Content)`
 `;
 
 
+export const SidebarContainer = styled.div`
+height: 100vh;
+width: 35%;
+background: #f8f9fa;
+font-size: 16px;
+color: #1c1d1f;
+
+`
+
+export const VideoAndTabsContainer = styled.div`
+display: flex;
+flex-direction: column;
+width: 100%;
+`
+
+
+export const SidebarTitle = styled.div`
+font-weight: bold;
+padding: 12px 16px;
+border-bottom: 1px solid grey;
+height: 54px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+background: #fff;
+`
+
+export const IconBtn = styled.button`
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+`;

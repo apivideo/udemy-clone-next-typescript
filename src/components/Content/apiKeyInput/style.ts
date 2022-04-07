@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import Image from "next/image";
 
 export const Wrapper = styled.div`
-  padding: 10px;
+  /* padding: 10px; */
+  font-family: 'Roboto', sans-serif;
 `;
 
 

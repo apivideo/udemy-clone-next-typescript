@@ -63,8 +63,3 @@ export const NoteActions = styled.div`
   gap: 10px;
 `;
 
-export const NoteBtn = styled.button`
-  border: none;
-  background: transparent;
-  cursor: pointer;
-`;

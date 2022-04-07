@@ -20,7 +20,7 @@ const ItemPreview: React.FC<ItemPreviewProps> = ({ video }): JSX.Element => {
         <ThumbnailContainer>
           <img src={video?.assets?.thumbnail} alt={'thumbnail'} />
           <PlayIcon>
-            <BiPlay color={'#000000'} size={'2.5rem'} />
+            <BiPlay color={'#000000'} size={'4rem'} />
           </PlayIcon>
         </ThumbnailContainer>
         <TitleContainer>{video.title}</TitleContainer>

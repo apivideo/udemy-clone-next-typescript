@@ -5,14 +5,14 @@ import {
   NoteTextDisplay,
   NoteItem,
   NoteActions,
-  NoteBtn,
   CreateNoteBtn,
   TimestampBtn,
 } from './style';
 import { HiPlusCircle } from 'react-icons/hi';
-import { FaPen, FaTrash } from 'react-icons/fa';
+import { FaTrash } from 'react-icons/fa';
 import { PlayerSdk } from '@api.video/player-sdk';
 import EditNote from './EditNote';
+import { IconBtn } from '../style';
 
 interface NotesProps {
   playerSdk: PlayerSdk;
@@ -20,7 +20,7 @@ interface NotesProps {
 }
 
 interface Note {
-  [key: string]: { note: string; seconds: number; edit: boolean };
+  [key: string]: { note: string; seconds: number };
 }
 
 const Notes: React.FC<NotesProps> = ({
@@ -28,10 +28,9 @@ const Notes: React.FC<NotesProps> = ({
   currTimestamp,
 }): JSX.Element => {
   const [createNoteMode, setCreateNoteMode] = useState<boolean>(false);
-  const [isEditMode, setEditMode] = useState<boolean>(false);
-  const [note, setNote] = useState('');
+  const [note, setNote] = useState<string>('');
   const [notesList, setNotesList] = useState<Note>(null);
-  const [editableNotes, setEditableNotes] = useState<Note>(notesList)
+
   const handleChangeNote = (e) => {
     setNote(e.target.value);
   };
@@ -42,7 +41,6 @@ const Notes: React.FC<NotesProps> = ({
       [currTimestamp.minutesFormat]: {
         note,
         seconds: currTimestamp.seconds,
-        edit: false,
       },
     });
     setCreateNoteMode(false);
@@ -55,21 +53,22 @@ const Notes: React.FC<NotesProps> = ({
     setNotesList(notesCopy);
   };
 
-//   const handleEditNote = (timestamp) => {
-//     setNotesList({
-//       ...notesList,
-//       [timestamp]: { ...notesList[timestamp], edit: true },
-//     });
-//     // setNote(notesList[timestamp].note);
-//   };
-
   return (
     <>
-      {!createNoteMode && (
+      {createNoteMode ? (
+        <EditNote
+          showTimestamp
+          value={note}
+          onChangeNote={handleChangeNote}
+          currTimestamp={currTimestamp.minutesFormat}
+          onSubmitNote={handleSubmitNote}
+          onCancelNote={() => setCreateNoteMode(false)}
+        />
+      ) : (
         <>
           <CreateNoteBtn onClick={() => setCreateNoteMode(true)}>
             {`Create a new note at ${currTimestamp.minutesFormat}`}
-            <HiPlusCircle color={'#000'} size={'1.3rem'} />
+            <HiPlusCircle color={'#000'} size={'2rem'} />
           </CreateNoteBtn>
           {notesList && (
             <NotesContainer>
@@ -84,46 +83,26 @@ const Notes: React.FC<NotesProps> = ({
                       {key}
                     </TimestampBtn>
 
-                    {notesList[key].edit ? (
-                      'edit'
-                    ) : (
-                      <NoteTextDisplay>
-                        <NoteActions>
-                          <NoteBtn>
-                            {/* <FaPen
-                              onClick={() => handleEditNote(key)}
-                              size={'1rem'}
-                            /> */}
-                          </NoteBtn>
-                          <NoteBtn
-                            onClick={() => {
-                              handleDeleteNote(key);
-                            }}
-                            value={key}
-                          >
-                            <FaTrash size={'1rem'} />
-                          </NoteBtn>
-                        </NoteActions>
-                        {notesList[key].note}
-                      </NoteTextDisplay>
-                    )}
+                    <NoteTextDisplay>
+                      <NoteActions>
+                        <IconBtn></IconBtn>
+                        <IconBtn
+                          onClick={() => {
+                            handleDeleteNote(key);
+                          }}
+                          value={key}
+                        >
+                          <FaTrash size={'1.5rem'} />
+                        </IconBtn>
+                      </NoteActions>
+                      {notesList[key].note}
+                    </NoteTextDisplay>
                   </NoteItem>
                 );
               })}
             </NotesContainer>
           )}
         </>
-      )}
-
-      {createNoteMode && (
-        <EditNote
-        showTimestamp
-          value={note}
-          onChangeNote={handleChangeNote}
-          currTimestamp={currTimestamp.minutesFormat}
-          onSubmitNote={handleSubmitNote}
-          onCancelNote={() => setCreateNoteMode(false)}
-        />
       )}
     </>
   );
