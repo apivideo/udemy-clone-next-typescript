@@ -46,11 +46,19 @@ export const SelectionContainer = styled.div`
 `;
 
 export const ItemsContainer = styled.div`
+overflow: hidden;
+
   display: flex;
   flex-wrap: nowrap;
-  gap: 20px;
+ 
+ 
   padding-bottom: 40px;
 `;
+
+export const Inner = styled.div`
+white-space: nowrap;
+transition: transform 0.3s;
+`
 
 export const ContentTitle = styled.div`
   font-size: 36px;

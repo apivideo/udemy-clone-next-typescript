@@ -4,19 +4,20 @@ export const Container = styled.div`
   border: 1px solid #d1d7dc;
   height: 150px;
   width: 400px;
-  display: flex;
   cursor: pointer;
   font-family: 'Roboto', sans-serif;
+  display: inline-flex;
+  margin: 0 5px;
   &:hover {
     background: #f6f9fa;
   }
 `;
 
 export const ThumbnailContainer = styled.div`
-  width: 100px;
+  width: 30%;
   height: 150px;
   position: relative;
-  background: black;
+  background: #000;
   img {
     width: 100%;
     height: 100%;
@@ -42,7 +43,7 @@ export const PlayIcon = styled.div`
 `;
 
 export const TitleContainer = styled.div`
-  padding: 20px;
+ width: 70%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -50,3 +51,7 @@ export const TitleContainer = styled.div`
   font-size: 16px;
   font-weight: bold;
 `;
+
+export const Title = styled.div`
+padding: 20px;
+`

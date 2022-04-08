@@ -101,7 +101,7 @@ export const Button = styled.button`
   }
 `;
 
-export const InputApikey = styled.input`
+export const StyledInput = styled.input`
   display: block;
   font-size: 14px;
   background: #fff;

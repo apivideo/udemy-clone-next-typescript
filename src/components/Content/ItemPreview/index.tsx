@@ -5,6 +5,7 @@ import {
   ThumbnailContainer,
   PlayIcon,
   TitleContainer,
+  Title
 } from './style';
 import { BiPlay } from 'react-icons/bi';
 import Link from 'next/link';
@@ -23,7 +24,11 @@ const ItemPreview: React.FC<ItemPreviewProps> = ({ video }): JSX.Element => {
             <BiPlay color={'#000000'} size={'4rem'} />
           </PlayIcon>
         </ThumbnailContainer>
-        <TitleContainer>{video.title}</TitleContainer>
+        <TitleContainer>
+          <Title>
+            {video.title}
+          </Title>
+        </TitleContainer>
       </Container>
     </Link>
   );

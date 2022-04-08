@@ -1,7 +1,6 @@
 import {
     createContext,
     Dispatch,
-    useEffect,
     useContext,
     useReducer,
 } from 'react';
@@ -13,6 +12,7 @@ interface AuthProviderProps {
 
 export interface AuthContext {
     apiKey: string
+    userName?: string
     accessToken: string
 }
 
@@ -24,6 +24,7 @@ export interface AuthStore {
 
 const initialState: AuthContext = {
     apiKey: '',
+    userName: 'Aya',
     accessToken: ''
 }
 

@@ -53,15 +53,22 @@ const VideoPage: React.FC<VideoPageProps> = ({ }): JSX.Element => {
   const { state } = useAuthContext()
 
   useEffect(() => {
+    if (videoId) {
+      // Getting the video details and setting the player SDK
+      getVideoDetails();
+    }
+  }, [videoId]);
+
+  useEffect(() => {
     if (playerSdk) {
-      // In this EventListener we can activate our player SDK methods when the player is ready to use
+      // 1. In this EventListener we can activate our player SDK methods when the player is ready to use
       playerSdk.addEventListener('ready', () => {
         setPlayerTheme();
         getDuration();
         playerSdk.hideControls(['more']);
       });
 
-      // Listen to the player's timestamp for notes
+      // 2. Listen to the player's timestamp for notes
       // @ts-ignore: Unreachable code error
       playerSdk.addEventListener('timeupdate', ({ currentTime }) => {
         setCurrTimestamp({
@@ -69,32 +76,22 @@ const VideoPage: React.FC<VideoPageProps> = ({ }): JSX.Element => {
           seconds: currentTime,
         });
       });
+
+      // 3. Get video analytics with the entered userName
+      getVideoAnalytics()
     }
   }, [playerSdk]);
 
   useEffect(() => {
-    if (videoId) {
-      getVideoId();
-    }
-  }, [videoId]);
+    // Once our video details are set, we can process it with symbl.ai to get conversationId
+    // getConversationId()
 
-  useEffect(() => {
-    if (video) {
-      //When video ready, get conversationId
-      // getConversationId()
-      videoSdk();
-    }
-  }, [video]);
+    // After we get the conversationId, we need to track the processing status with jobId, then we can use:
+    // getSummary()
+    // getTranscription()
+    // getTopics() 
+  }, [video])
 
-  useEffect(() => {
-    //When we have conversationId, get summary, transcription and topics
-    if (conversationId) {
-      console.log({ conversationId })
-      // getSummary()
-      // getTranscription()
-      // getTopics()
-    }
-  }, [conversationId])
 
   const setPlayerTheme = () => {
     playerSdk.setTheme({
@@ -106,27 +103,38 @@ const VideoPage: React.FC<VideoPageProps> = ({ }): JSX.Element => {
     });
   }
 
-  const getVideoId = async () => {
+  const getVideoAnalytics = async () => {
+    const response = await fetch(`/api/analytics`, {
+      method: 'Post',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ apiKey: state.apiKey, videoId, metadata: { userName: state.userName } }),
+    });
+    const data = await response.json();
+    console.log(data)
+  }
+
+  const getVideoDetails = async () => {
+    // 1. Get video details by videoId
     const response = await fetch(`/api/video`, {
       method: 'Post',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ apiKey: process.env.API_KEY, videoId }),
+      body: JSON.stringify({ apiKey: state.apiKey, videoId }),
     });
-    const data = await response.json();
-    setVideo(data);
+    const videoData = await response.json();
+    setVideo(videoData);
+
+    // 2. Create our player SDK
+    const player = new PlayerSdk(document.getElementById('myVideo'), {
+      id: videoData.videoId,
+      hideTitle: true,
+      metadata: { userName: state.userName }
+    });
+    setPlayerSdk(player);
   };
 
-  const videoSdk = async () => {
-    try {
-      const player = new PlayerSdk(document.getElementById('myVideo'), {
-        id: video.videoId,
-        hideTitle: true,
-      });
-      setPlayerSdk(player);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+
 
   const getConversationId = async () => {
     const response = await fetch('/api/get-conversation-id', {
@@ -137,7 +145,6 @@ const VideoPage: React.FC<VideoPageProps> = ({ }): JSX.Element => {
     const data = await response.json();
     setConversationId(data.conversationId)
   }
-
 
   const getSummary = async () => {
     const response = await fetch(`/api/${conversationId}/get-summary`, {
