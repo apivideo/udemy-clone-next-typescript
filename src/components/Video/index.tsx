@@ -76,9 +76,6 @@ const VideoPage: React.FC<VideoPageProps> = ({ }): JSX.Element => {
           seconds: currentTime,
         });
       });
-
-      // 3. Get video analytics with the entered userName
-      getVideoAnalytics()
     }
   }, [playerSdk]);
 
@@ -95,15 +92,15 @@ const VideoPage: React.FC<VideoPageProps> = ({ }): JSX.Element => {
 
   const setPlayerTheme = () => {
     playerSdk.setTheme({
-      trackUnplayed: '#6a6f73ff',
       trackPlayed: '#a435f0ff',
-      trackBackground: '#a435f0ff',
+      trackUnplayed: '#6a6f73ff',
+      trackBackground: '#6a6f73ff',
       link: '#d1d7dcff',
       linkActive: '#000'
     });
   }
 
-  const getVideoAnalytics = async () => {
+  const getVideoAnalytics = async (player) => {
     const response = await fetch(`/api/analytics`, {
       method: 'Post',
       headers: {
@@ -111,8 +108,21 @@ const VideoPage: React.FC<VideoPageProps> = ({ }): JSX.Element => {
       },
       body: JSON.stringify({ apiKey: state.apiKey, videoId, metadata: { userName: state.userName } }),
     });
-    const data = await response.json();
-    console.log(data)
+    const { data } = await response.json();
+    if (data?.length) {
+      const pauseSeconds = getLastPaused(data)
+      if (pauseSeconds) player.setCurrentTime(pauseSeconds)
+    }
+  }
+
+  const getLastPaused = (playerSessionData) => {
+    // 1. Get the video's pause events
+    const pauseEvents = playerSessionData.filter((item) => item.type === 'pause');
+    if (pauseEvents.length) {
+      // 2. Take the most recent pause seconds which is the last in the events
+      const lastPauseSeconds = pauseEvents[pauseEvents.length - 1].at;
+      return lastPauseSeconds
+    }
   }
 
   const getVideoDetails = async () => {
@@ -125,15 +135,15 @@ const VideoPage: React.FC<VideoPageProps> = ({ }): JSX.Element => {
     const videoData = await response.json();
     setVideo(videoData);
 
-    // 2. Create our player SDK
+    // 2. Create and set our player SDK
     const player = new PlayerSdk(document.getElementById('myVideo'), {
       id: videoData.videoId,
       hideTitle: true,
       metadata: { userName: state.userName }
     });
     setPlayerSdk(player);
+    getVideoAnalytics(player)
   };
-
 
 
   const getConversationId = async () => {
