@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavbarContainer, LogoContainer, Title } from './style';
+import { NavbarContainer, LogoContainer, Title, NameIcon } from './style';
 import Logo from '@public/logo-udemy.svg';
 import LogoLight from '@public/logo-udemy-light.svg';
 import SearchBar from '@components/SearchBar';
@@ -19,11 +19,12 @@ const Navbar: React.FC<NavbarProps> = ({ videoMode, video }): JSX.Element => {
       {videoMode ? (
         <Title>{video?.title}</Title>
       ) : (
-        <>
-          <span>Categories</span>
-          <SearchBar />
-        </>
-      )}
+          <>
+            <span>Categories</span>
+            <SearchBar />
+          </>
+        )}
+      <NameIcon>API</NameIcon>
     </NavbarContainer>
   );
 };

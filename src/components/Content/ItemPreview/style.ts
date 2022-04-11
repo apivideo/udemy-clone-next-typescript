@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import * as ProgressPrimitive from '@radix-ui/react-progress';
 
 export const Container = styled.div`
   border: 1px solid #d1d7dc;
@@ -37,21 +38,36 @@ export const PlayIcon = styled.div`
   position: absolute;
   top: 52px;
   left: calc(50% - 26px);
-  svg{
+  svg {
     margin-left: 5px;
   }
 `;
 
 export const TitleContainer = styled.div`
- width: 70%;
+  width: 70%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  justify-content: space-between;
   word-break: break-word;
   font-size: 16px;
   font-weight: bold;
+  height: 150px;
 `;
 
 export const Title = styled.div`
-padding: 20px;
-`
+  padding: 20px;
+`;
+
+export const StyledProgress = styled(ProgressPrimitive.Root)`
+  position: relative;
+  overflow: hidden;
+  background: #d1d7dc;
+  width: 100%;
+  height: 10px;
+`;
+
+export const StyledIndicator = styled(ProgressPrimitive.Indicator)`
+  background-color: #5624d0;
+  height: 100%;
+  transition: width 660ms cubic-bezier(0.65, 0, 0.35, 1);
+`;

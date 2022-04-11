@@ -21,3 +21,14 @@ export const LogoContainer = styled.a`
 export const Title = styled.div`
   font-size: 15px;
 `;
+
+export const NameIcon = styled.div`
+  background: #1c1d1f;
+  color: #ffffff;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  width: 40px;
+`;

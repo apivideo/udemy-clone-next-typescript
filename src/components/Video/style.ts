@@ -92,7 +92,7 @@ export const ActionBtn = styled.button`
 `;
 
 export const NotesContent = styled(TabsPrimitive.Content)`
-  width: 800px;
+  width: 80%;
   margin: 0 auto;
 `;
 

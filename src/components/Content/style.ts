@@ -2,18 +2,17 @@ import styled from 'styled-components';
 
 export const ContentContainer = styled.div`
   font-family: 'Roboto', sans-serif;
-  @media (min-width: 980px) {
-    margin: 0 50px 0 50px;
-  }
+  margin: 0 50px;
 `;
 
 export const BannerContainer = styled.div`
   position: relative;
-  margin-bottom: 50px;
+  margin: 0 auto 40px auto;
+    max-width: 1340px;
 `;
 
 export const StyledImg = styled.img`
-  width: -webkit-fill-available;
+  width: 100%;
 `;
 
 export const TextBox = styled.div`
@@ -41,8 +40,9 @@ export const TextBox = styled.div`
 `;
 
 export const SelectionContainer = styled.div`
-  padding: 0px 80px;
-  width: 100%;
+  padding: 0px 20px;
+  max-width: 1340px;
+    margin: 0 auto;
 `;
 
 export const ItemsContainer = styled.div`

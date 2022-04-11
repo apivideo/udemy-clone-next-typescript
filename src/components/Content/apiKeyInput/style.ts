@@ -1,18 +1,17 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const Wrapper = styled.div`
-  /* padding: 10px; */
+  margin: 0 50px;
   font-family: 'Roboto', sans-serif;
 `;
 
-
 export const Container = styled.div`
-  background: url("/color-stroke.png"), #060c19;
-  border-radius: 4px;
+  background: url('/color-stroke.png'), #060c19;
   padding: 0px 10%;
   display: flex;
   flex-direction: row;
-  width: 100%;
+  max-width: 1340px;
+  margin: 0 auto;
   background-position: 50%;
   align-items: center;
   justify-content: space-between;
