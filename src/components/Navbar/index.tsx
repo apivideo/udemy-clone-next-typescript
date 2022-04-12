@@ -24,7 +24,7 @@ const Navbar: React.FC<NavbarProps> = ({ videoMode, video }): JSX.Element => {
             <SearchBar />
           </>
         )}
-      <NameIcon>API</NameIcon>
+      {!videoMode && <NameIcon>API</NameIcon>}
     </NavbarContainer>
   );
 };

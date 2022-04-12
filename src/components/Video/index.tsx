@@ -12,20 +12,29 @@ import {
   ActionsContainer,
   ActionBtn,
   NotesContent,
-  SidebarContainer,
-  SidebarTitle,
+  TranscriptContainer,
+  TranscriptTitle,
   IconBtn,
   VideoAndTabsContainer,
+  OverviewContent,
+  TranscriptContent,
+  MobileTranscriptContainer,
+  OverviewSummary
 } from './style';
 import { PlayerSdk } from '@api.video/player-sdk';
-import { getSecondsToHours, getMinutesFormat, getVideoLastPaused } from '@utils/functions';
+import {
+  getSecondsToHours,
+  getMinutesFormat,
+  getVideoLastPaused,
+} from '@utils/functions';
 import { MdEditNote } from 'react-icons/md';
 import { BsFillFileEarmarkTextFill } from 'react-icons/bs';
 import { IoCloseOutline } from 'react-icons/io5';
 import Notes from './Notes';
 import { useAuthContext } from '@components/Providers/Auth';
+import * as mockData from './mockData.js';
 
-interface VideoPageProps {}
+interface VideoPageProps { }
 
 const tabNames = {
   OVERVIEW: 'Overview',
@@ -37,7 +46,11 @@ export interface Timestamp {
   seconds: number;
 }
 
-const VideoPage: React.FC<VideoPageProps> = ({}): JSX.Element => {
+export interface Note {
+  [key: string]: { note: string; seconds: number };
+}
+
+const VideoPage: React.FC<VideoPageProps> = ({ }): JSX.Element => {
   const router = useRouter();
   const videoId = router?.query?.videoId;
   const [video, setVideo] = useState<Video>(null);
@@ -50,6 +63,8 @@ const VideoPage: React.FC<VideoPageProps> = ({}): JSX.Element => {
   });
   const [openSidebar, setOpenSidebar] = useState<boolean>(false);
   const [conversationId, setConversationId] = useState<string>('');
+  const [notesList, setNotesList] = useState<Note>(null);
+  const [createNoteMode, setCreateNoteMode] = useState<boolean>(false);
   const { state } = useAuthContext();
 
   useEffect(() => {
@@ -115,18 +130,6 @@ const VideoPage: React.FC<VideoPageProps> = ({}): JSX.Element => {
     }
   };
 
-  // const getLastPaused = (playerSessionData) => {
-  //   // 1. Get the video's pause events
-  //   const pauseEvents = playerSessionData.filter(
-  //     (item) => item.type === 'pause'
-  //   );
-  //   if (pauseEvents.length) {
-  //     // 2. Take the most recent pause seconds which is the last in the events
-  //     const lastPauseSeconds = pauseEvents[pauseEvents.length - 1].at;
-  //     return lastPauseSeconds;
-  //   }
-  // };
-
   const getVideoDetails = async () => {
     // 1. Get video details by videoId
     const response = await fetch(`/api/video`, {
@@ -142,6 +145,7 @@ const VideoPage: React.FC<VideoPageProps> = ({}): JSX.Element => {
       id: videoData.videoId,
       hideTitle: true,
       metadata: { userName: state.userName },
+      hidePoster: true,
     });
     setPlayerSdk(player);
     getVideoAnalytics(player);
@@ -202,7 +206,13 @@ const VideoPage: React.FC<VideoPageProps> = ({}): JSX.Element => {
   };
 
   const handleTranscript = () => {
-    setOpenSidebar(true);
+    setOpenSidebar(!openSidebar);
+  };
+
+  const handleNote = () => {
+    setCurrTab(tabNames.NOTES);
+    playerSdk.pause();
+    setCreateNoteMode(true)
   };
 
   return (
@@ -218,19 +228,27 @@ const VideoPage: React.FC<VideoPageProps> = ({}): JSX.Element => {
                 height="600px"
                 allowFullScreen
                 style={{ border: 0 }}
-              ></iframe>
+              />
 
               <ActionsContainer>
-                <ActionBtn onClick={() => setCurrTab(tabNames.NOTES)}>
+                <ActionBtn onClick={handleNote}>
                   <MdEditNote size={'2rem'} />
                 </ActionBtn>
-                <ActionBtn>
-                  <BsFillFileEarmarkTextFill
-                    size={'2rem'}
-                    onClick={handleTranscript}
-                  />
+                <ActionBtn onClick={handleTranscript}>
+                  <BsFillFileEarmarkTextFill size={'2rem'} />
                 </ActionBtn>
               </ActionsContainer>
+              {openSidebar && (
+                <MobileTranscriptContainer>
+                  <TranscriptTitle>
+                    Transcript
+                    <IconBtn onClick={() => setOpenSidebar(false)}>
+                      <IoCloseOutline size={'2rem'} />
+                    </IconBtn>
+                  </TranscriptTitle>
+                  <TranscriptContent>Transcript here</TranscriptContent>
+                </MobileTranscriptContainer>
+              )}
               <TabsContainer
                 defaultValue={tabNames.OVERVIEW}
                 onValueChange={(e) => setCurrTab(e)}
@@ -246,23 +264,40 @@ const VideoPage: React.FC<VideoPageProps> = ({}): JSX.Element => {
                 </TabsList>
                 <TabsContent value={tabNames.OVERVIEW}>
                   <OverviewTitle>About this course</OverviewTitle>
-                  {`Duration: ${videoDuration && videoDuration} hours`}
+                  <OverviewContent>
+                    {`Duration: ${videoDuration && videoDuration} hours`}
+                    <OverviewSummary>
+                      <h3>Summary</h3>
+                      {mockData &&
+                        mockData.summary.map((item) => {
+                          return <div>{item.text}</div>;
+                        })}
+                    </OverviewSummary>
+
+                  </OverviewContent>
                 </TabsContent>
                 <NotesContent value={tabNames.NOTES}>
-                  <Notes playerSdk={playerSdk} currTimestamp={currTimestamp} />
+                  <Notes
+                    notesList={notesList}
+                    setNotesList={setNotesList}
+                    playerSdk={playerSdk}
+                    currTimestamp={currTimestamp}
+                    createNoteMode={createNoteMode}
+                    setCreateNoteMode={setCreateNoteMode}
+                  />
                 </NotesContent>
               </TabsContainer>
             </VideoAndTabsContainer>
             {openSidebar && (
-              <SidebarContainer>
-                <SidebarTitle>
-                  Transcript{' '}
+              <TranscriptContainer>
+                <TranscriptTitle>
+                  Transcript
                   <IconBtn onClick={() => setOpenSidebar(false)}>
                     <IoCloseOutline size={'1.5rem'} />
                   </IconBtn>
-                </SidebarTitle>
-                Transcript here
-              </SidebarContainer>
+                </TranscriptTitle>
+                <TranscriptContent>Transcript here</TranscriptContent>
+              </TranscriptContainer>
             )}
           </Container>
         </>
