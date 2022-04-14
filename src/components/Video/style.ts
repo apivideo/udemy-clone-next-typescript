@@ -153,6 +153,9 @@ export const OverviewContent = styled.div`
 
 export const TranscriptContent = styled.div`
   padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 `;
 
 export const OverviewSummary = styled.div`

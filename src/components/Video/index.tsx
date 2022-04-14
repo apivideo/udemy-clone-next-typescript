@@ -92,14 +92,14 @@ const VideoPage: React.FC<VideoPageProps> = ({ }): JSX.Element => {
     }
   }, [playerSdk]);
 
-  useEffect(() => {
-    // Once our video details are set, we can process it with symbl.ai to get conversationId
+  // [Symbl.ai] Once our video details are set, we can process it with symbl.ai to get conversationId
+  // useEffect(() => {
     // getConversationId()
     // After we get the conversationId, we need to track the processing status with jobId, then we can use:
     // getSummary()
     // getTranscription()
     // getTopics()
-  }, [video]);
+  // }, [video]);
 
   const setPlayerTheme = () => {
     playerSdk.setTheme({
@@ -124,7 +124,9 @@ const VideoPage: React.FC<VideoPageProps> = ({ }): JSX.Element => {
       }),
     });
     const { data } = await response.json();
+    // If we have a player session
     if (data?.length) {
+      // Extract the last pause event
       const pauseSeconds = getVideoLastPaused(data);
       if (pauseSeconds) player.setCurrentTime(pauseSeconds);
     }
@@ -148,57 +150,59 @@ const VideoPage: React.FC<VideoPageProps> = ({ }): JSX.Element => {
       hidePoster: true,
     });
     setPlayerSdk(player);
+    // Get analytics to know when the video was last paused
     getVideoAnalytics(player);
   };
+  
+  // [Symbl.ai]
+  // const getConversationId = async () => {
+  //   const response = await fetch('/api/get-conversation-id', {
+  //     method: 'Post',
+  //     headers: { 'Content-Type': 'application/json' },
+  //     body: JSON.stringify({
+  //       videoUrl: video.assets.mp4,
+  //       accessToken: state.accessToken,
+  //     }),
+  //   });
+  //   const data = await response.json();
+  //   setConversationId(data.conversationId);
+  // };
 
-  const getConversationId = async () => {
-    const response = await fetch('/api/get-conversation-id', {
-      method: 'Post',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        videoUrl: video.assets.mp4,
-        accessToken: state.accessToken,
-      }),
-    });
-    const data = await response.json();
-    setConversationId(data.conversationId);
-  };
+  // const getSummary = async () => {
+  //   const response = await fetch(`/api/${conversationId}/get-summary`, {
+  //     method: 'Get',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       Authorization: `Bearer ${state.accessToken}`,
+  //     },
+  //   });
+  //   const data = await response.json();
+  //   console.log('summary', data);
+  // };
 
-  const getSummary = async () => {
-    const response = await fetch(`/api/${conversationId}/get-summary`, {
-      method: 'Get',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${state.accessToken}`,
-      },
-    });
-    const data = await response.json();
-    console.log('summary', data);
-  };
+  // const getTranscription = async () => {
+  //   const response = await fetch(`/api/${conversationId}/get-speech-to-text`, {
+  //     method: 'Get',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       Authorization: `Bearer ${state.accessToken}`,
+  //     },
+  //   });
+  //   const data = await response.json();
+  //   console.log('transcription', data);
+  // };
 
-  const getTranscription = async () => {
-    const response = await fetch(`/api/${conversationId}/get-speech-to-text`, {
-      method: 'Get',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${state.accessToken}`,
-      },
-    });
-    const data = await response.json();
-    console.log('transcription', data);
-  };
-
-  const getTopics = async () => {
-    const response = await fetch(`/api/${conversationId}/get-topics`, {
-      method: 'Get',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${state.accessToken}`,
-      },
-    });
-    const data = await response.json();
-    console.log('topics', data);
-  };
+  // const getTopics = async () => {
+  //   const response = await fetch(`/api/${conversationId}/get-topics`, {
+  //     method: 'Get',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       Authorization: `Bearer ${state.accessToken}`,
+  //     },
+  //   });
+  //   const data = await response.json();
+  //   console.log('topics', data);
+  // };
 
   const getDuration = async () => {
     const duration = await playerSdk.getDuration();
@@ -246,7 +250,10 @@ const VideoPage: React.FC<VideoPageProps> = ({ }): JSX.Element => {
                       <IoCloseOutline size={'2rem'} />
                     </IconBtn>
                   </TranscriptTitle>
-                  <TranscriptContent>Transcript here</TranscriptContent>
+                  <TranscriptContent>{mockData &&
+                    mockData.messages.map((item, index) => {
+                      return <div key={`i${index}`}>{item.text}</div>;
+                    })}</TranscriptContent>
                 </MobileTranscriptContainer>
               )}
               <TabsContainer
@@ -269,8 +276,8 @@ const VideoPage: React.FC<VideoPageProps> = ({ }): JSX.Element => {
                     <OverviewSummary>
                       <h3>Summary</h3>
                       {mockData &&
-                        mockData.summary.map((item) => {
-                          return <div>{item.text}</div>;
+                        mockData.summary.map((item, index) => {
+                          return <div key={`i${index}`}>{item.text}</div>;
                         })}
                     </OverviewSummary>
 
@@ -296,7 +303,10 @@ const VideoPage: React.FC<VideoPageProps> = ({ }): JSX.Element => {
                     <IoCloseOutline size={'1.5rem'} />
                   </IconBtn>
                 </TranscriptTitle>
-                <TranscriptContent>Transcript here</TranscriptContent>
+                <TranscriptContent>{mockData &&
+                  mockData.messages.map((item, index) => {
+                    return <div key={`i${index}`}>{item.text}</div>;
+                  })}</TranscriptContent>
               </TranscriptContainer>
             )}
           </Container>

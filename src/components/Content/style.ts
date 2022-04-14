@@ -8,7 +8,7 @@ export const ContentContainer = styled.div`
 export const BannerContainer = styled.div`
   position: relative;
   margin: 0 auto 40px auto;
-    max-width: 1340px;
+  max-width: 1340px;
 `;
 
 export const StyledImg = styled.img`
@@ -40,25 +40,19 @@ export const TextBox = styled.div`
 `;
 
 export const SelectionContainer = styled.div`
-  padding: 0px 20px;
+  padding: 0px 80px;
   max-width: 1340px;
-    margin: 0 auto;
+  margin: 0 auto;
 `;
 
 export const ItemsContainer = styled.div`
-overflow: hidden;
-
-  display: flex;
-  flex-wrap: nowrap;
- 
- 
+  width: 90%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
   padding-bottom: 40px;
+  display: flex;
 `;
-
-export const Inner = styled.div`
-white-space: nowrap;
-transition: transform 0.3s;
-`
 
 export const ContentTitle = styled.div`
   font-size: 36px;

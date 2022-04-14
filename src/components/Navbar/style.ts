@@ -11,6 +11,8 @@ export const NavbarContainer = styled.div<{ videoMode: boolean }>`
   color: ${(props) => props.videoMode && '#fff'};
   border-bottom: ${(props) => props.videoMode && '1px solid #3e4143'};
   font-family: 'Roboto', sans-serif;
+  width: 100%;
+  position: relative;
 `;
 
 export const LogoContainer = styled.a`
@@ -31,4 +33,6 @@ export const NameIcon = styled.div`
   justify-content: center;
   height: 40px;
   width: 40px;
-`;
+  position: absolute;
+  right: 20px;
+  `

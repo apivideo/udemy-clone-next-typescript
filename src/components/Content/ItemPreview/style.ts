@@ -7,7 +7,7 @@ export const Container = styled.div`
   width: 400px;
   cursor: pointer;
   font-family: 'Roboto', sans-serif;
-  display: inline-flex;
+  display: flex;
   margin: 0 5px;
   &:hover {
     background: #f6f9fa;
@@ -15,7 +15,7 @@ export const Container = styled.div`
 `;
 
 export const ThumbnailContainer = styled.div`
-  width: 30%;
+  width: 120px;
   height: 150px;
   position: relative;
   background: #000;
@@ -44,18 +44,21 @@ export const PlayIcon = styled.div`
 `;
 
 export const TitleContainer = styled.div`
-  width: 70%;
+  width: 300px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  word-break: break-word;
-  font-size: 16px;
-  font-weight: bold;
   height: 150px;
 `;
 
-export const Title = styled.div`
+export const Title = styled.span`
   padding: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 `;
 
 export const StyledProgress = styled(ProgressPrimitive.Root)`
@@ -63,7 +66,7 @@ export const StyledProgress = styled(ProgressPrimitive.Root)`
   overflow: hidden;
   background: #d1d7dc;
   width: 100%;
-  height: 10px;
+  height: 12px;
 `;
 
 export const StyledIndicator = styled(ProgressPrimitive.Indicator)`

@@ -8,7 +8,7 @@ export const getMinutesFormat = (seconds: number) => {
 }
 
 export const getVideoLastPaused = (playerSessionData) => {
-    // 1. Get the video's pause events
+    // 1. Filter the video's pause events
     const pauseEvents = playerSessionData.filter(
         (item) => item.type === 'pause'
     );

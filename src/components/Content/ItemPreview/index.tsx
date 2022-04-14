@@ -55,6 +55,7 @@ const ItemPreview: React.FC<ItemPreviewProps> = ({ video }): JSX.Element => {
     });
     const { data } = await analyticsResponse.json();
     if (data?.length) {
+
       const pauseSeconds = getVideoLastPaused(data);
       setVideoPaused(pauseSeconds)
     }
