@@ -1,4 +1,3 @@
-import Head from 'next/head';
 import Navbar from '@components/Navbar';
 import Content from '@components/Content';
 import React, { useEffect, useState } from 'react';

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
     NoteEditContainer,
     NoteEditor,
@@ -26,7 +26,6 @@ const EditNote: React.FC<EditNoteProps> = ({
     onSubmitNote,
     onCancelNote,
 }): JSX.Element => {
-const [note, setNote] = useState('')
 
     return (
         <NoteEditContainer>

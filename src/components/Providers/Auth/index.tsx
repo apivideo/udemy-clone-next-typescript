@@ -1,10 +1,11 @@
+import React from 'react'
 import {
     createContext,
     Dispatch,
     useContext,
     useReducer,
 } from 'react';
-import Reducer, { Action, AuthActions } from './reducer'
+import Reducer, { Action } from './reducer'
 
 interface AuthProviderProps {
     children: React.ReactNode

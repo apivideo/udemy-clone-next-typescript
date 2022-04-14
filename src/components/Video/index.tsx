@@ -32,9 +32,8 @@ import { BsFillFileEarmarkTextFill } from 'react-icons/bs';
 import { IoCloseOutline } from 'react-icons/io5';
 import Notes from './Notes';
 import { useAuthContext } from '@components/Providers/Auth';
-import * as mockData from './mockData.js';
+import { mockData } from './mockData.js';
 
-interface VideoPageProps { }
 
 const tabNames = {
   OVERVIEW: 'Overview',
@@ -50,7 +49,7 @@ export interface Note {
   [key: string]: { note: string; seconds: number };
 }
 
-const VideoPage: React.FC<VideoPageProps> = ({ }): JSX.Element => {
+const VideoPage: React.FC = (): JSX.Element => {
   const router = useRouter();
   const videoId = router?.query?.videoId;
   const [video, setVideo] = useState<Video>(null);
@@ -82,7 +81,8 @@ const VideoPage: React.FC<VideoPageProps> = ({ }): JSX.Element => {
       });
 
       // 2. Listen to the player's timestamp for notes
-      // @ts-ignore: Unreachable code error
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       playerSdk.addEventListener('timeupdate', ({ currentTime }) => {
         setCurrTimestamp({
           minutesFormat: getMinutesFormat(currentTime),
@@ -94,11 +94,11 @@ const VideoPage: React.FC<VideoPageProps> = ({ }): JSX.Element => {
 
   // [Symbl.ai] Once our video details are set, we can process it with symbl.ai to get conversationId
   // useEffect(() => {
-    // getConversationId()
-    // After we get the conversationId, we need to track the processing status with jobId, then we can use:
-    // getSummary()
-    // getTranscription()
-    // getTopics()
+  // getConversationId()
+  // After we get the conversationId, we need to track the processing status with jobId, then we can use:
+  // getSummary()
+  // getTranscription()
+  // getTopics()
   // }, [video]);
 
   const setPlayerTheme = () => {
@@ -153,7 +153,7 @@ const VideoPage: React.FC<VideoPageProps> = ({ }): JSX.Element => {
     // Get analytics to know when the video was last paused
     getVideoAnalytics(player);
   };
-  
+
   // [Symbl.ai]
   // const getConversationId = async () => {
   //   const response = await fetch('/api/get-conversation-id', {

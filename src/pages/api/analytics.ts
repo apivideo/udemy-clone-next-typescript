@@ -7,7 +7,7 @@ const handler = async (req, res) => {
   });
   const { videoId, metadata } = req.body
 
-  let { data } = await client.rawStatistics.listVideoSessions({ videoId, metadata })
+  const { data } = await client.rawStatistics.listVideoSessions({ videoId, metadata })
 
   if (data.length) {
     // We want to get the last session in the list because it's the most recent one

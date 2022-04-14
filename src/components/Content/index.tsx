@@ -10,8 +10,6 @@ import {
     ContentTitle,
     StyledImg,
 } from './style';
-import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
-
 interface ContentProps {
     videos?: Array<Video>;
 }
@@ -36,9 +34,9 @@ const Content: React.FC<ContentProps> = ({ videos }): JSX.Element => {
                 <ContentTitle>Let's start learning, Aya</ContentTitle>
 
                 <ItemsContainer>
-                    
+
                             {videos.length
-                                ? videos.map((video, i) => {
+                                ? videos.map((video) => {
                                     return <ItemPreview key={video.videoId} video={video} />
                                 })
                                 : null}
