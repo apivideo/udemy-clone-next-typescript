@@ -30,7 +30,7 @@ An open-source example application that allows users to create a learning plafor
         <li><a href="#step-1-clone">Step 1. Clone</a></li>
         <li><a href="#step-2-create-an-account">Step 2. Create an Account</a></li>
         <li><a href="#step-3-set-up-environment-variables">Step 3. Set Up Environment Variables</a></li>
-      </ul>
+         <li><a href="#project-configurations">Project Configurations
     </li>
   </ol>
 </details>
@@ -86,26 +86,28 @@ Then edit the file like `API_KEY` should be your `API_KEY` available on the dash
 ```javascript
 API_KEY = XXXXXXXXXXXXXXXXXXXXXXXXXXX;
 ```
+
 ## Project Configurations
+
 **Configuration styled-components**
 
 Since 12.1, Next.js added support to the Next.js Compiler for [styled-components](https://nextjs.org/docs/advanced-features/compiler#styled-components), update your `next.config.js` file:
 
 ```json
 // next.config.js
-module.exports = { 
+module.exports = {
 	compiler: {
 		styledComponents: true,
 },
 ```
 
-**[Create a custom _document.js file](https://www.notion.so/Blog-post-Udemy-clone-089f8a5b04374257acd54cb8bc2e8f49)**
+**Create a custom \_document.js file**
 
 To render our styled-components at the server-side, we need to override `_document.js.` For this, create a `_document.js` file under the pages folder and add the following content into it. We will use also use the google font [Roboto](https://fonts.google.com/specimen/Roboto).
 
 ```jsx
-import Document, { Html, Head, Main, NextScript } from "next/document";
-import { ServerStyleSheet } from "styled-components";
+import Document, { Html, Head, Main, NextScript } from 'next/document';
+import { ServerStyleSheet } from 'styled-components';
 
 class MyDocument extends Document {
   static async getInitialProps(ctx) {
@@ -156,18 +158,14 @@ export default MyDocument;
 
 **Typescript configuration**
 
-In your root folder, create a `tsconfig.json`  file and copy the following TS configuration. I like to use absolute imports with `@` throughout the project.
+In your root folder, create a `tsconfig.json` file and copy the following TS configuration. I like to use absolute imports with `@` throughout the project.
 
 ```json
 // tsconfig.json
 {
   "compilerOptions": {
     "target": "es6",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
@@ -181,37 +179,22 @@ In your root folder, create a `tsconfig.json`  file and copy the following TS co
     "jsx": "preserve",
     "baseUrl": ".",
     "allowSyntheticDefaultImports": true,
-    "types": [
-      "@typescript-eslint/eslint-plugin"
-    ],
+    "types": ["@typescript-eslint/eslint-plugin"],
     "paths": {
-      "@public/*": [
-        "public/*"
-      ],
-      "@components/*": [
-        "src/components/*"
-      ],
-			"@utils/*": [
-        "src/utils/*"
-      ]
+      "@public/*": ["public/*"],
+      "@components/*": ["src/components/*"],
+      "@utils/*": ["src/utils/*"]
     },
     "incremental": true
   },
-  "include": [
-    "next-env.d.ts",
-    "@types/*.d.ts",
-    "**/**/*.ts",
-    "**/**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules",
-  ]
+  "include": ["next-env.d.ts", "@types/*.d.ts", "**/**/*.ts", "**/**/*.tsx"],
+  "exclude": ["node_modules"]
 }
 ```
 
 **Configuring next.config.js for SVG imports**
 
-We are using some SVG imports in the project, so to make it work we need to install [@svgr/webpack](https://www.npmjs.com/package/@svgr/webpack) and add a little configuration in our `next.config.js` file. 
+We are using some SVG imports in the project, so to make it work we need to install [@svgr/webpack](https://www.npmjs.com/package/@svgr/webpack) and add a little configuration in our `next.config.js` file.
 
 ```bash
 npm i @svgr/webpack
@@ -219,7 +202,7 @@ npm i @svgr/webpack
 
 Copy this configuration to your `next.config.js` file:
 
-```jsx
+```javascript
 // next.config.js
 
 /** @type {import('next').NextConfig} */
