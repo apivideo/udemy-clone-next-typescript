@@ -93,7 +93,7 @@ API_KEY = XXXXXXXXXXXXXXXXXXXXXXXXXXX;
 
 Since 12.1, Next.js added support to the Next.js Compiler for [styled-components](https://nextjs.org/docs/advanced-features/compiler#styled-components), update your `next.config.js` file:
 
-```json
+```javascript
 // next.config.js
 module.exports = {
 	compiler: {
