@@ -1,3 +1,4 @@
+import React from 'react'
 import Document, { Html, Head, Main, NextScript } from "next/document";
 import { ServerStyleSheet } from "styled-components";
 
@@ -8,24 +9,24 @@ class MyDocument extends Document {
 
     try {
       ctx.renderPage = () =>
-          originalRenderPage({
-              enhanceApp: (App) => (props) =>
-                  sheet.collectStyles(<App {...props} />),
-          })
+        originalRenderPage({
+          enhanceApp: (App) => (props) =>
+            sheet.collectStyles(<App {...props} />),
+        })
 
       const initialProps = await Document.getInitialProps(ctx)
       return {
-          ...initialProps,
-          styles: (
-              <>
-                  {initialProps.styles}
-                  {sheet.getStyleElement()}
-              </>
-          ),
+        ...initialProps,
+        styles: (
+          <>
+            {initialProps.styles}
+            {sheet.getStyleElement()}
+          </>
+        ),
       }
-  } finally {
+    } finally {
       sheet.seal()
-  }
+    }
   }
   render() {
     return (

@@ -12,20 +12,28 @@ import {
   ActionsContainer,
   ActionBtn,
   NotesContent,
-  SidebarContainer,
-  SidebarTitle,
+  TranscriptContainer,
+  TranscriptTitle,
   IconBtn,
-  VideoAndTabsContainer
+  VideoAndTabsContainer,
+  OverviewContent,
+  TranscriptContent,
+  MobileTranscriptContainer,
+  OverviewSummary
 } from './style';
 import { PlayerSdk } from '@api.video/player-sdk';
-import { getSecondsToHours, getMinutesFormat } from '@utils/functions';
+import {
+  getSecondsToHours,
+  getMinutesFormat,
+  getVideoLastPaused,
+} from '@utils/functions';
 import { MdEditNote } from 'react-icons/md';
 import { BsFillFileEarmarkTextFill } from 'react-icons/bs';
 import { IoCloseOutline } from 'react-icons/io5';
 import Notes from './Notes';
 import { useAuthContext } from '@components/Providers/Auth';
+import { mockData } from './mockData.js';
 
-interface VideoPageProps { }
 
 const tabNames = {
   OVERVIEW: 'Overview',
@@ -37,7 +45,11 @@ export interface Timestamp {
   seconds: number;
 }
 
-const VideoPage: React.FC<VideoPageProps> = ({ }): JSX.Element => {
+export interface Note {
+  [key: string]: { note: string; seconds: number };
+}
+
+const VideoPage: React.FC = (): JSX.Element => {
   const router = useRouter();
   const videoId = router?.query?.videoId;
   const [video, setVideo] = useState<Video>(null);
@@ -49,14 +61,14 @@ const VideoPage: React.FC<VideoPageProps> = ({ }): JSX.Element => {
     seconds: 0,
   });
   const [openSidebar, setOpenSidebar] = useState<boolean>(false);
-  const [conversationId, setConversationId] = useState<string>('')
-  const { state } = useAuthContext()
+  const [conversationId, setConversationId] = useState<string>('');
+  const [notesList, setNotesList] = useState<Note>(null);
+  const [createNoteMode, setCreateNoteMode] = useState<boolean>(false);
+  const { state } = useAuthContext();
 
   useEffect(() => {
-    if (videoId) {
-      // Getting the video details and setting the player SDK
-      getVideoDetails();
-    }
+    // Getting the video details and setting the player SDK
+    videoId && getVideoDetails();
   }, [videoId]);
 
   useEffect(() => {
@@ -69,51 +81,56 @@ const VideoPage: React.FC<VideoPageProps> = ({ }): JSX.Element => {
       });
 
       // 2. Listen to the player's timestamp for notes
-      // @ts-ignore: Unreachable code error
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       playerSdk.addEventListener('timeupdate', ({ currentTime }) => {
         setCurrTimestamp({
           minutesFormat: getMinutesFormat(currentTime),
           seconds: currentTime,
         });
       });
-
-      // 3. Get video analytics with the entered userName
-      getVideoAnalytics()
     }
   }, [playerSdk]);
 
-  useEffect(() => {
-    // Once our video details are set, we can process it with symbl.ai to get conversationId
-    // getConversationId()
-
-    // After we get the conversationId, we need to track the processing status with jobId, then we can use:
-    // getSummary()
-    // getTranscription()
-    // getTopics() 
-  }, [video])
-
+  // [Symbl.ai] Once our video details are set, we can process it with symbl.ai to get conversationId
+  // useEffect(() => {
+  // getConversationId()
+  // After we get the conversationId, we need to track the processing status with jobId, then we can use:
+  // getSummary()
+  // getTranscription()
+  // getTopics()
+  // }, [video]);
 
   const setPlayerTheme = () => {
     playerSdk.setTheme({
-      trackUnplayed: '#6a6f73ff',
       trackPlayed: '#a435f0ff',
-      trackBackground: '#a435f0ff',
+      trackUnplayed: '#6a6f73ff',
+      trackBackground: '#6a6f73ff',
       link: '#d1d7dcff',
-      linkActive: '#000'
+      linkActive: '#000',
     });
-  }
+  };
 
-  const getVideoAnalytics = async () => {
+  const getVideoAnalytics = async (player) => {
     const response = await fetch(`/api/analytics`, {
       method: 'Post',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ apiKey: state.apiKey, videoId, metadata: { userName: state.userName } }),
+      body: JSON.stringify({
+        apiKey: state.apiKey,
+        videoId,
+        metadata: { userName: state.userName },
+      }),
     });
-    const data = await response.json();
-    console.log(data)
-  }
+    const { data } = await response.json();
+    // If we have a player session
+    if (data?.length) {
+      // Extract the last pause event
+      const pauseSeconds = getVideoLastPaused(data);
+      if (pauseSeconds) player.setCurrentTime(pauseSeconds);
+    }
+  };
 
   const getVideoDetails = async () => {
     // 1. Get video details by videoId
@@ -125,62 +142,67 @@ const VideoPage: React.FC<VideoPageProps> = ({ }): JSX.Element => {
     const videoData = await response.json();
     setVideo(videoData);
 
-    // 2. Create our player SDK
+    // 2. Create and set our player SDK
     const player = new PlayerSdk(document.getElementById('myVideo'), {
       id: videoData.videoId,
       hideTitle: true,
-      metadata: { userName: state.userName }
+      metadata: { userName: state.userName },
+      hidePoster: true,
     });
     setPlayerSdk(player);
+    // Get analytics to know when the video was last paused
+    getVideoAnalytics(player);
   };
 
+  // [Symbl.ai]
+  // const getConversationId = async () => {
+  //   const response = await fetch('/api/get-conversation-id', {
+  //     method: 'Post',
+  //     headers: { 'Content-Type': 'application/json' },
+  //     body: JSON.stringify({
+  //       videoUrl: video.assets.mp4,
+  //       accessToken: state.accessToken,
+  //     }),
+  //   });
+  //   const data = await response.json();
+  //   setConversationId(data.conversationId);
+  // };
 
+  // const getSummary = async () => {
+  //   const response = await fetch(`/api/${conversationId}/get-summary`, {
+  //     method: 'Get',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       Authorization: `Bearer ${state.accessToken}`,
+  //     },
+  //   });
+  //   const data = await response.json();
+  //   console.log('summary', data);
+  // };
 
-  const getConversationId = async () => {
-    const response = await fetch('/api/get-conversation-id', {
-      method: 'Post',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ videoUrl: video.assets.mp4, accessToken: state.accessToken }),
-    });
-    const data = await response.json();
-    setConversationId(data.conversationId)
-  }
+  // const getTranscription = async () => {
+  //   const response = await fetch(`/api/${conversationId}/get-speech-to-text`, {
+  //     method: 'Get',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       Authorization: `Bearer ${state.accessToken}`,
+  //     },
+  //   });
+  //   const data = await response.json();
+  //   console.log('transcription', data);
+  // };
 
-  const getSummary = async () => {
-    const response = await fetch(`/api/${conversationId}/get-summary`, {
-      method: 'Get',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${state.accessToken}`
-      },
-    });
-    const data = await response.json();
-    console.log('summary', data)
-  }
-
-  const getTranscription = async () => {
-    const response = await fetch(`/api/${conversationId}/get-speech-to-text`, {
-      method: 'Get',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${state.accessToken}`
-      },
-    });
-    const data = await response.json();
-    console.log('transcription', data)
-  }
-
-  const getTopics = async () => {
-    const response = await fetch(`/api/${conversationId}/get-topics`, {
-      method: 'Get',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${state.accessToken}`
-      },
-    });
-    const data = await response.json();
-    console.log('topics', data)
-  }
+  // const getTopics = async () => {
+  //   const response = await fetch(`/api/${conversationId}/get-topics`, {
+  //     method: 'Get',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       Authorization: `Bearer ${state.accessToken}`,
+  //     },
+  //   });
+  //   const data = await response.json();
+  //   console.log('topics', data);
+  // };
 
   const getDuration = async () => {
     const duration = await playerSdk.getDuration();
@@ -188,7 +210,13 @@ const VideoPage: React.FC<VideoPageProps> = ({ }): JSX.Element => {
   };
 
   const handleTranscript = () => {
-    setOpenSidebar(true);
+    setOpenSidebar(!openSidebar);
+  };
+
+  const handleNote = () => {
+    setCurrTab(tabNames.NOTES);
+    playerSdk.pause();
+    setCreateNoteMode(true)
   };
 
   return (
@@ -204,20 +232,30 @@ const VideoPage: React.FC<VideoPageProps> = ({ }): JSX.Element => {
                 height="600px"
                 allowFullScreen
                 style={{ border: 0 }}
-              ></iframe>
-
+              />
 
               <ActionsContainer>
-                <ActionBtn onClick={() => setCurrTab(tabNames.NOTES)}>
+                <ActionBtn onClick={handleNote}>
                   <MdEditNote size={'2rem'} />
                 </ActionBtn>
-                <ActionBtn>
-                  <BsFillFileEarmarkTextFill
-                    size={'2rem'}
-                    onClick={handleTranscript}
-                  />
+                <ActionBtn onClick={handleTranscript}>
+                  <BsFillFileEarmarkTextFill size={'2rem'} />
                 </ActionBtn>
               </ActionsContainer>
+              {openSidebar && (
+                <MobileTranscriptContainer>
+                  <TranscriptTitle>
+                    Transcript
+                    <IconBtn onClick={() => setOpenSidebar(false)}>
+                      <IoCloseOutline size={'2rem'} />
+                    </IconBtn>
+                  </TranscriptTitle>
+                  <TranscriptContent>{mockData &&
+                    mockData.messages.map((item, index) => {
+                      return <div key={`i${index}`}>{item.text}</div>;
+                    })}</TranscriptContent>
+                </MobileTranscriptContainer>
+              )}
               <TabsContainer
                 defaultValue={tabNames.OVERVIEW}
                 onValueChange={(e) => setCurrTab(e)}
@@ -233,23 +271,43 @@ const VideoPage: React.FC<VideoPageProps> = ({ }): JSX.Element => {
                 </TabsList>
                 <TabsContent value={tabNames.OVERVIEW}>
                   <OverviewTitle>About this course</OverviewTitle>
-                  {`Duration: ${videoDuration && videoDuration} hours`}
+                  <OverviewContent>
+                    {`Duration: ${videoDuration && videoDuration} hours`}
+                    <OverviewSummary>
+                      <h3>Summary</h3>
+                      {mockData &&
+                        mockData.summary.map((item, index) => {
+                          return <div key={`i${index}`}>{item.text}</div>;
+                        })}
+                    </OverviewSummary>
+
+                  </OverviewContent>
                 </TabsContent>
                 <NotesContent value={tabNames.NOTES}>
-                  <Notes playerSdk={playerSdk} currTimestamp={currTimestamp} />
+                  <Notes
+                    notesList={notesList}
+                    setNotesList={setNotesList}
+                    playerSdk={playerSdk}
+                    currTimestamp={currTimestamp}
+                    createNoteMode={createNoteMode}
+                    setCreateNoteMode={setCreateNoteMode}
+                  />
                 </NotesContent>
               </TabsContainer>
             </VideoAndTabsContainer>
             {openSidebar && (
-              <SidebarContainer>
-                <SidebarTitle>
-                  Transcript{' '}
+              <TranscriptContainer>
+                <TranscriptTitle>
+                  Transcript
                   <IconBtn onClick={() => setOpenSidebar(false)}>
                     <IoCloseOutline size={'1.5rem'} />
                   </IconBtn>
-                </SidebarTitle>
-                  Transcript here
-              </SidebarContainer>
+                </TranscriptTitle>
+                <TranscriptContent>{mockData &&
+                  mockData.messages.map((item, index) => {
+                    return <div key={`i${index}`}>{item.text}</div>;
+                  })}</TranscriptContent>
+              </TranscriptContainer>
             )}
           </Container>
         </>

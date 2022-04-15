@@ -1,18 +1,17 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const Wrapper = styled.div`
-  /* padding: 10px; */
+  margin: 0 50px;
   font-family: 'Roboto', sans-serif;
 `;
 
-
 export const Container = styled.div`
-  background: url("/color-stroke.png"), #060c19;
-  border-radius: 4px;
+  background: url('/color-stroke.png'), #060c19;
   padding: 0px 10%;
   display: flex;
   flex-direction: row;
-  width: 100%;
+  max-width: 1340px;
+  margin: 0 auto;
   background-position: 50%;
   align-items: center;
   justify-content: space-between;
@@ -23,7 +22,7 @@ export const Container = styled.div`
   }
   @media (min-width: 1200px) {
     justify-content: center;
-    gap: 150px;
+    gap: 100px;
   }
   @media (max-width: 600px) {
     padding: 0px 20px;
@@ -46,7 +45,7 @@ export const Col2 = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-  width: 200px;
+  width: 300px;
   @media (max-width: 500px) {
     width: 150px;
   }
@@ -93,9 +92,12 @@ export const Button = styled.button`
   border: 0;
   cursor: pointer;
   font-weight: 600;
+  width: fit-content;
   padding: 8px 16px;
   transition: all 0.2s ease-in-out;
   outline: none;
+  align-self: flex-end;
+  gap: 5px;
   &:hover {
     filter: brightness(90%);
   }
@@ -114,4 +116,10 @@ export const StyledInput = styled.input`
   }
   height: auto;
   width: 100%;
+`;
+
+export const InputContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px;
 `;
