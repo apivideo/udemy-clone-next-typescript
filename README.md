@@ -14,7 +14,7 @@
 An open-source example application that allows users to create a learning plaform like Udemy with&nbsp;<a href="https://api.video" target="_blank">api.video</a>
 <br />
  <br />
-<a href="#link to demo">View Demo</a>
+<a href="https://udemy-clone-next-typescript.vercel.app/">Go to the demo ▶️</a>
 </p>
 
 <!-- TABLE OF CONTENTS -->
@@ -82,7 +82,7 @@ touch .env.development
 Then edit the file like `API_KEY` should be your `API_KEY` available on the dashboard
 
 ```javascript
-API_KEY = XXXXXXXXXXXXXXXXXXXXXXXXXXX;
+API_KEY = YOUR_API_KEY;
 ```
 
 ## Project Configurations
