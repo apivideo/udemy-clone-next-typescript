@@ -6,24 +6,31 @@
     "dev": "next dev -p 3003",
     "build": "next build",
     "start": "next start",
+    "server-dev": "nodemon server/index.js",
+    "server": "node server/index.js",
     "lint": "next lint"
   },
   "dependencies": {
     "@api.video/nodejs-client": "^2.2.4",
-    "@api.video/player-sdk": "^1.2.13",
+    "@api.video/player-sdk": "^1.2.14",
+    "@radix-ui/react-progress": "^0.1.4",
     "@radix-ui/react-tabs": "^0.1.5",
+    "@svgr/webpack": "^6.2.1",
     "@types/jest": "^27.4.1",
     "@types/react-dom": "^17.0.13",
     "axios": "^0.26.1",
     "babel-plugin-inline-react-svg": "^2.0.1",
     "babel-plugin-module-resolver": "^4.1.0",
     "babel-plugin-styled-components": "^2.0.6",
+    "express": "^4.17.3",
     "next": "^12.1.0",
+    "pure-react-carousel": "^1.28.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-icons": "^4.3.1",
     "styled-components": "^5.3.3",
-    "swr": "^1.2.2"
+    "swr": "^1.2.2",
+    "tsconfig-paths-webpack-plugin": "^3.5.2"
   },
   "devDependencies": {
     "@types/node": "^17.0.21",
@@ -34,6 +41,7 @@
     "eslint": "^8.11.0",
     "eslint-config-next": "12.1.0",
     "eslint-plugin-react": "^7.29.4",
+    "nodemon": "^2.0.15",
     "typescript": "^4.6.2"
   },
   "description": "This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).",

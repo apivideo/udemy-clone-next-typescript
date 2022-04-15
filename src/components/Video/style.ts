@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import * as TabsPrimitive from '@radix-ui/react-tabs';
 
 export const Container = styled.div`
-  margin-bottom: 100px;
   display: flex;
   font-family: 'Roboto', sans-serif;
 `;
@@ -11,8 +10,8 @@ export const TabsContainer = styled(TabsPrimitive.Root)`
   display: flex;
   flex-direction: column;
   justify-content: center;
-    width: 80%;
-    margin: 0 auto;
+  width: 80%;
+  margin: 0 auto 50px auto;
 `;
 
 export const TabsList = styled(TabsPrimitive.List)`
@@ -64,6 +63,7 @@ export const TabsContent = styled(TabsPrimitive.Content)`
   border-bottom-left-radius: 6;
   border-bottom-right-radius: 6;
   outline: 'none';
+  color: #1c1d1f;
 `;
 
 export const OverviewTitle = styled.div`
@@ -92,41 +92,75 @@ export const ActionBtn = styled.button`
 `;
 
 export const NotesContent = styled(TabsPrimitive.Content)`
-  width: 800px;
+  width: 80%;
   margin: 0 auto;
 `;
 
+export const TranscriptContainer = styled.div`
+  display: none;
+  @media (min-width: 980px) {
+    display: block;
+    height: 100vh;
+    width: 35%;
+    background: #f8f9fa;
+    font-size: 16px;
+    color: #1c1d1f;
+  }
+`;
 
-export const SidebarContainer = styled.div`
-height: 100vh;
-width: 35%;
-background: #f8f9fa;
-font-size: 16px;
-color: #1c1d1f;
-
-`
+export const MobileTranscriptContainer = styled.div`
+  width: 100%;
+  background: #f8f9fa;
+  font-size: 16px;
+  color: #1c1d1f;
+  @media (min-width: 980px) {
+    display: none;
+  }
+`;
 
 export const VideoAndTabsContainer = styled.div`
-display: flex;
-flex-direction: column;
-width: 100%;
-`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
 
-
-export const SidebarTitle = styled.div`
-font-weight: bold;
-padding: 12px 16px;
-border-bottom: 1px solid grey;
-height: 54px;
-display: flex;
-align-items: center;
-justify-content: space-between;
-background: #fff;
-`
+export const TranscriptTitle = styled.div`
+  font-weight: bold;
+  padding: 12px 16px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 8%), 0 4px 12px rgb(0 0 0 / 8%);
+  @media (min-width: 980px) {
+    box-shadow: none;
+    border-bottom: 1px solid grey;
+  }
+`;
 
 export const IconBtn = styled.button`
   border: none;
   background: transparent;
   cursor: pointer;
   padding: 0;
+`;
+
+export const OverviewContent = styled.div`
+  margin-top: 20px;
+  font-size: 16px;
+`;
+
+export const TranscriptContent = styled.div`
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+`;
+
+export const OverviewSummary = styled.div`
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 `;

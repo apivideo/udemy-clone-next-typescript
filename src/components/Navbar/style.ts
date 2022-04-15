@@ -11,6 +11,8 @@ export const NavbarContainer = styled.div<{ videoMode: boolean }>`
   color: ${(props) => props.videoMode && '#fff'};
   border-bottom: ${(props) => props.videoMode && '1px solid #3e4143'};
   font-family: 'Roboto', sans-serif;
+  width: 100%;
+  position: relative;
 `;
 
 export const LogoContainer = styled.a`
@@ -21,3 +23,16 @@ export const LogoContainer = styled.a`
 export const Title = styled.div`
   font-size: 15px;
 `;
+
+export const NameIcon = styled.div`
+  background: #1c1d1f;
+  color: #ffffff;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  width: 40px;
+  position: absolute;
+  right: 20px;
+  `

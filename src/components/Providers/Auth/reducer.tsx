@@ -5,7 +5,7 @@ export enum AuthActions {
 }
 
 export interface PayloadType {
-  [key: string]: any;
+  [key: string]: string;
 }
 export type Action =
   | {

@@ -1,4 +1,5 @@
 import Video from '@api.video/nodejs-client/lib/model/Video';
+import { useAuthContext } from '@components/Providers/Auth';
 import React from 'react';
 import ItemPreview from './ItemPreview';
 import {
@@ -8,14 +9,14 @@ import {
     SelectionContainer,
     ItemsContainer,
     ContentTitle,
-    StyledImg
+    StyledImg,
 } from './style';
-
 interface ContentProps {
     videos?: Array<Video>;
 }
 
 const Content: React.FC<ContentProps> = ({ videos }): JSX.Element => {
+    const { state } = useAuthContext()
 
     return (
         <div>
@@ -25,21 +26,23 @@ const Content: React.FC<ContentProps> = ({ videos }): JSX.Element => {
                     <TextBox>
                         <h1>Learning that gets you</h1>
                         <p>
-                        Skills for your present (and your future). Get started with us.
+                            Skills for your present (and your future). Get started with us.
             </p>
                     </TextBox>
                 </BannerContainer>
             </ContentContainer>
             <SelectionContainer>
 
-                <ContentTitle>Let's start learning, Aya</ContentTitle>
+                <ContentTitle>{`Let's start learning, ${state.userName}`}</ContentTitle>
 
                 <ItemsContainer>
+
                     {videos.length
-                        ? videos.map((video, i) => {
-                            return <ItemPreview key={video.videoId} video={video} />;
+                        ? videos.map((video) => {
+                            return <ItemPreview key={video.videoId} video={video} />
                         })
                         : null}
+
                 </ItemsContainer>
             </SelectionContainer>
         </div>

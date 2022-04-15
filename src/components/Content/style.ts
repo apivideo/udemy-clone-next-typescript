@@ -2,18 +2,17 @@ import styled from 'styled-components';
 
 export const ContentContainer = styled.div`
   font-family: 'Roboto', sans-serif;
-  @media (min-width: 980px) {
-    margin: 0 50px 0 50px;
-  }
+  margin: 0 50px;
 `;
 
 export const BannerContainer = styled.div`
   position: relative;
-  margin-bottom: 50px;
+  margin: 0 auto 40px auto;
+  max-width: 1340px;
 `;
 
 export const StyledImg = styled.img`
-  width: -webkit-fill-available;
+  width: 100%;
 `;
 
 export const TextBox = styled.div`
@@ -42,14 +41,17 @@ export const TextBox = styled.div`
 
 export const SelectionContainer = styled.div`
   padding: 0px 80px;
-  width: 100%;
+  max-width: 1340px;
+  margin: 0 auto;
 `;
 
 export const ItemsContainer = styled.div`
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 20px;
+  width: 90%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
   padding-bottom: 40px;
+  display: flex;
 `;
 
 export const ContentTitle = styled.div`

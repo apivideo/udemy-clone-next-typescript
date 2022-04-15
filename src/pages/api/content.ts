@@ -7,7 +7,7 @@ const handler = async (req, res) => {
     apiKey,
   });
 
-  let result = await client.videos.list({});
+  const result = await client.videos.list({});
   res.status(200).json({ ...result });
   return;
 };

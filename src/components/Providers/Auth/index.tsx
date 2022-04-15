@@ -1,11 +1,11 @@
+import React from 'react'
 import {
     createContext,
     Dispatch,
-    useEffect,
     useContext,
     useReducer,
 } from 'react';
-import Reducer, { Action, AuthActions } from './reducer'
+import Reducer, { Action } from './reducer'
 
 interface AuthProviderProps {
     children: React.ReactNode
@@ -13,6 +13,7 @@ interface AuthProviderProps {
 
 export interface AuthContext {
     apiKey: string
+    userName?: string
     accessToken: string
 }
 
@@ -24,6 +25,7 @@ export interface AuthStore {
 
 const initialState: AuthContext = {
     apiKey: '',
+    userName: 'Aya',
     accessToken: ''
 }
 
