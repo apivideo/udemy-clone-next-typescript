@@ -3,7 +3,7 @@
     <img src="https://github.com/apivideo/api.video-api-specification/blob/master/apivideo_banner.png?raw=true" alt="Api.video Logo" width="100%" >
 </a>
 </p>
-<h1 align="center">Udemy clone with api.video + Next.js + Typescript 🔥</h1>
+<h1 align="center">Udemy clone with api.video + Next.js + Typescript 👩‍🎓</h1>
 <div align="center">
     <a href="https://twitter.com/intent/follow?screen_name=api_video"><img src="https://img.shields.io/twitter/follow/api_video?style=social" alt="Twitter Badge"/></a>
     <a href="https://community.api.video"><img src="https://img.shields.io/discourse/topics?server=https%3A%2F%2Fcommunity.api.video" alt="Pull Requests Badge"/></a>
@@ -11,7 +11,7 @@
 <br />
 
 <p align="center">
-An open-source example application that allows users to create a learning plaform like Udemy with<a href="https://api.video" target="_blank" >api.video</a>
+An open-source example application that allows users to create a learning plaform like Udemy with&nbsp;<a href="https://api.video" target="_blank">api.video</a>
 <br />
  <br />
 <a href="#link to demo">View Demo</a>
@@ -43,11 +43,7 @@ An open-source example application that allows users to create a learning plafor
 
 - [@api.video/nodejs-client.](https://github.com/apivideo/api.video-nodejs-client) - api.video's Node.js is a lightweight client built in TypeScript that streamlines the coding process. Chunking files is handled for you, as is pagination and refreshing your tokens.
 
-### NextJS:
-
-- [`/pages/api`](pages/api) routes — a couple endpoints for making requests to the api.video API.
-- Dynamic routes to display a specific video.
-- Usage of [React API Context](https://fr.reactjs.org/docs/context.html) to store a new ApiKey
+- [@api.video/player-sdk](https://github.com/apivideo/api.video-player-sdk) - SDK to control and interact with the api.video HTML5 Player
 
 <!-- GETTING STARTED -->
 
