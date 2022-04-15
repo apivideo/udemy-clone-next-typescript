@@ -5,7 +5,8 @@ const httpClient = require("axios");
 const SYMBL_CONCURRENCY = 3
 
 const fetchSymblToken = async () => {
-    const url = "https://api.symbl.ai/oauth2/token:generate";
+    try {
+        const url = "https://api.symbl.ai/oauth2/token:generate";
     const data = {
         type: "application",
         appId: config.SYMBL_APP_ID,
@@ -15,8 +16,9 @@ const fetchSymblToken = async () => {
     const token = await response.data.accessToken
     console.log("🦄 Symbl Authentication Successful - ", token);
     return token; // Store the response token
-
-
+    } catch (error) {
+        console.log(error)
+    }
 };
 
 const postAsyncVideo = async (accessToken, videoUrl, videoId) => {

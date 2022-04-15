@@ -10,14 +10,13 @@ function updateContent(videos) {
             console.log("Updating...")
             // new videos have been added at top
             // add new videos to content
-
             const videos_to_be_added = videos.filter(video => {
                 const video_time = new Date(video.publishedAt).getTime()
                 const content_time = new Date(content[0].publishedAt).getTime()
                 return (video_time > content_time)
             })
             addVideos.addVideos(videos_to_be_added, content);
-            Symbl.processSymbl()
+
         }
         // this means that we have caught up to latest videos
         // check if length is now equal
@@ -37,9 +36,9 @@ function updateContent(videos) {
     } else {
         console.log("Adding new videos")
         addVideos.addVideos(videos, content)
-        Symbl.processSymbl()
         console.log("Update done")
     }
+    Symbl.processSymbl()
 }
 
 

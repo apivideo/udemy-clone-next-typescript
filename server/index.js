@@ -7,24 +7,6 @@ const app = express()
 app.use(express.json())
 const PORT = 3001
 
-/* 
-// list all videos (all pages)
-let allVideos = [];
-for(let currentPage=1 ; ; currentPage++) {
-  const res = await client.videos.list({ currentPage });
-  allVideos = [...allVideos, ...res.data];
-  if(currentPage >= res.pagination.pagesTotal) {
-    break;
-  }
-}
-
-// list videos that have all the given tags (only first results page)
-const videosWithTags = await client.videos.list({ tags: ["tag1", "tag2"] });
-
-// list videos that have all the given metadata values (only first results page)
-const videosWithMetadata = await client.videos.list({ metadata: { "key1": "value1", "key2": "value2" } })
-*/
-
 // Test if backend is up
 app.get('/', (request, response) => {
     console.log("Sending all content")
@@ -78,13 +60,6 @@ app.post('/api/content', (request, response) => {
 
     response.status(200).end()
 })
-
-/*app.get('/api/content', (request, response) => {
-    response.json()
-})*/
-
-
-
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
