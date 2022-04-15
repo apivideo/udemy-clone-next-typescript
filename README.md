@@ -41,6 +41,8 @@ An open-source example application that allows users to create a learning plafor
 
 ### Api.video:
 
+We'll recreate the video bookmark feature from Udemy and show a video progress using api.video's Node.js client and player SDK
+
 - [@api.video/nodejs-client.](https://github.com/apivideo/api.video-nodejs-client) - api.video's Node.js is a lightweight client built in TypeScript that streamlines the coding process. Chunking files is handled for you, as is pagination and refreshing your tokens.
 
 - [@api.video/player-sdk](https://github.com/apivideo/api.video-player-sdk) - SDK to control and interact with the api.video HTML5 Player
