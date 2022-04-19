@@ -17,12 +17,11 @@ import { IconBtn } from '../style';
 interface NotesProps {
   playerSdk: PlayerSdk;
   currTimestamp: Timestamp;
-  notesList: Note
-  setNotesList: (notes: Note) => void
-  createNoteMode: boolean
-  setCreateNoteMode: (bool: boolean) => void
+  notesList: Note;
+  setNotesList: (notes: Note) => void;
+  createNoteMode: boolean;
+  setCreateNoteMode: (bool: boolean) => void;
 }
-
 
 const Notes: React.FC<NotesProps> = ({
   playerSdk,
@@ -30,7 +29,7 @@ const Notes: React.FC<NotesProps> = ({
   notesList,
   setNotesList,
   createNoteMode,
-  setCreateNoteMode
+  setCreateNoteMode,
 }): JSX.Element => {
   const [note, setNote] = useState<string>('');
 
@@ -57,9 +56,9 @@ const Notes: React.FC<NotesProps> = ({
   };
 
   const handleCreateNote = () => {
-    setCreateNoteMode(true)
-    playerSdk.pause()
-  }
+    setCreateNoteMode(true);
+    playerSdk.pause();
+  };
 
   return (
     <>
@@ -73,44 +72,44 @@ const Notes: React.FC<NotesProps> = ({
           onCancelNote={() => setCreateNoteMode(false)}
         />
       ) : (
-          <>
-            <CreateNoteBtn onClick={handleCreateNote}>
-              {`Create a new note at ${currTimestamp.minutesFormat}`}
-              <HiPlusCircle color={'#000'} size={'2rem'} />
-            </CreateNoteBtn>
-            {notesList && (
-              <NotesContainer>
-                {Object.keys(notesList).map((key, i) => {
-                  return (
-                    <NoteItem key={`note-${i}`}>
-                      <TimestampBtn
-                        onClick={() =>
-                          playerSdk.setCurrentTime(notesList[key].seconds)
-                        }
-                      >
-                        {key}
-                      </TimestampBtn>
+        <>
+          <CreateNoteBtn onClick={handleCreateNote}>
+            {`Create a new note at ${currTimestamp.minutesFormat}`}
+            <HiPlusCircle color={'#000'} size={'2rem'} />
+          </CreateNoteBtn>
+          {notesList && (
+            <NotesContainer>
+              {Object.keys(notesList).map((key, i) => {
+                return (
+                  <NoteItem key={`note-${i}`}>
+                    <TimestampBtn
+                      onClick={() =>
+                        playerSdk.setCurrentTime(notesList[key].seconds)
+                      }
+                    >
+                      {key}
+                    </TimestampBtn>
 
-                      <NoteTextDisplay>
-                        <NoteActions>
-                          <IconBtn
-                            onClick={() => {
-                              handleDeleteNote(key);
-                            }}
-                            value={key}
-                          >
-                            <FaTrash size={'1.5rem'} />
-                          </IconBtn>
-                        </NoteActions>
-                        {notesList[key].note}
-                      </NoteTextDisplay>
-                    </NoteItem>
-                  );
-                })}
-              </NotesContainer>
-            )}
-          </>
-        )}
+                    <NoteTextDisplay>
+                      <NoteActions>
+                        <IconBtn
+                          onClick={() => {
+                            handleDeleteNote(key);
+                          }}
+                          value={key}
+                        >
+                          <FaTrash size={'1.5rem'} />
+                        </IconBtn>
+                      </NoteActions>
+                      {notesList[key].note}
+                    </NoteTextDisplay>
+                  </NoteItem>
+                );
+              })}
+            </NotesContainer>
+          )}
+        </>
+      )}
     </>
   );
 };

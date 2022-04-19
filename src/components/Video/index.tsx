@@ -19,21 +19,18 @@ import {
   OverviewContent,
   TranscriptContent,
   MobileTranscriptContainer,
-  OverviewSummary
+  OverviewSummary,
 } from './style';
 import { PlayerSdk } from '@api.video/player-sdk';
 import {
   getSecondsToHours,
   getMinutesFormat,
-  getVideoLastPaused,
 } from '@utils/functions';
 import { MdEditNote } from 'react-icons/md';
 import { BsFillFileEarmarkTextFill } from 'react-icons/bs';
 import { IoCloseOutline } from 'react-icons/io5';
 import Notes from './Notes';
 import { useAuthContext } from '@components/Providers/Auth';
-import { mockData } from './mockData.js';
-
 
 const tabNames = {
   OVERVIEW: 'Overview',
@@ -61,9 +58,10 @@ const VideoPage: React.FC = (): JSX.Element => {
     seconds: 0,
   });
   const [openSidebar, setOpenSidebar] = useState<boolean>(false);
-  const [conversationId, setConversationId] = useState<string>('');
   const [notesList, setNotesList] = useState<Note>(null);
   const [createNoteMode, setCreateNoteMode] = useState<boolean>(false);
+  // [Symbl.ai]
+  // const [conversationId, setConversationId] = useState<string>('');
   const { state } = useAuthContext();
 
   useEffect(() => {
@@ -88,6 +86,7 @@ const VideoPage: React.FC = (): JSX.Element => {
           minutesFormat: getMinutesFormat(currentTime),
           seconds: currentTime,
         });
+        localStorage.setItem(`time_${videoId}`, currentTime);
       });
     }
   }, [playerSdk]);
@@ -111,27 +110,6 @@ const VideoPage: React.FC = (): JSX.Element => {
     });
   };
 
-  const getVideoAnalytics = async (player) => {
-    const response = await fetch(`/api/analytics`, {
-      method: 'Post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        apiKey: state.apiKey,
-        videoId,
-        metadata: { userName: state.userName },
-      }),
-    });
-    const { data } = await response.json();
-    // If we have a player session
-    if (data?.length) {
-      // Extract the last pause event
-      const pauseSeconds = getVideoLastPaused(data);
-      if (pauseSeconds) player.setCurrentTime(pauseSeconds);
-    }
-  };
-
   const getVideoDetails = async () => {
     // 1. Get video details by videoId
     const response = await fetch(`/api/video`, {
@@ -146,12 +124,13 @@ const VideoPage: React.FC = (): JSX.Element => {
     const player = new PlayerSdk(document.getElementById('myVideo'), {
       id: videoData.videoId,
       hideTitle: true,
-      metadata: { userName: state.userName },
       hidePoster: true,
     });
+    const hasTime = localStorage.getItem(`time_${videoData.videoId}`);
+    if (hasTime) {
+      player.setCurrentTime(parseInt(hasTime));
+    }
     setPlayerSdk(player);
-    // Get analytics to know when the video was last paused
-    getVideoAnalytics(player);
   };
 
   // [Symbl.ai]
@@ -216,7 +195,7 @@ const VideoPage: React.FC = (): JSX.Element => {
   const handleNote = () => {
     setCurrTab(tabNames.NOTES);
     playerSdk.pause();
-    setCreateNoteMode(true)
+    setCreateNoteMode(true);
   };
 
   return (
@@ -250,10 +229,7 @@ const VideoPage: React.FC = (): JSX.Element => {
                       <IoCloseOutline size={'2rem'} />
                     </IconBtn>
                   </TranscriptTitle>
-                  <TranscriptContent>{mockData &&
-                    mockData.messages.map((item, index) => {
-                      return <div key={`i${index}`}>{item.text}</div>;
-                    })}</TranscriptContent>
+                  <TranscriptContent>Coming soon!</TranscriptContent>
                 </MobileTranscriptContainer>
               )}
               <TabsContainer
@@ -275,12 +251,8 @@ const VideoPage: React.FC = (): JSX.Element => {
                     {`Duration: ${videoDuration && videoDuration} hours`}
                     <OverviewSummary>
                       <h3>Summary</h3>
-                      {mockData &&
-                        mockData.summary.map((item, index) => {
-                          return <div key={`i${index}`}>{item.text}</div>;
-                        })}
+                      Coming soon!
                     </OverviewSummary>
-
                   </OverviewContent>
                 </TabsContent>
                 <NotesContent value={tabNames.NOTES}>
@@ -303,10 +275,7 @@ const VideoPage: React.FC = (): JSX.Element => {
                     <IoCloseOutline size={'1.5rem'} />
                   </IconBtn>
                 </TranscriptTitle>
-                <TranscriptContent>{mockData &&
-                  mockData.messages.map((item, index) => {
-                    return <div key={`i${index}`}>{item.text}</div>;
-                  })}</TranscriptContent>
+                <TranscriptContent>Coming soon!</TranscriptContent>
               </TranscriptContainer>
             )}
           </Container>

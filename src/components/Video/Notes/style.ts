@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 export const CreateNoteBtn = styled.button`
   width: 100%;
@@ -32,7 +32,6 @@ export const TimestampBtn = styled.button`
   padding: 5px 10px;
 `;
 
-
 export const NotesContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -62,4 +61,3 @@ export const NoteActions = styled.div`
   align-self: flex-end;
   gap: 10px;
 `;
-

@@ -1,46 +1,38 @@
-import React from 'react'
-import {
-    createContext,
-    Dispatch,
-    useContext,
-    useReducer,
-} from 'react';
-import Reducer, { Action } from './reducer'
+import React from 'react';
+import { createContext, Dispatch, useContext, useReducer } from 'react';
+import Reducer, { Action } from './reducer';
 
 interface AuthProviderProps {
-    children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export interface AuthContext {
-    apiKey: string
-    userName?: string
-    accessToken: string
+  apiKey: string;
+  userName?: string;
+  accessToken: string;
 }
 
 export interface AuthStore {
-    state: AuthContext
-    dispatch?: Dispatch<Action>
+  state: AuthContext;
+  dispatch?: Dispatch<Action>;
 }
-
 
 const initialState: AuthContext = {
-    apiKey: '',
-    userName: 'Aya',
-    accessToken: ''
-}
+  apiKey: '',
+  userName: 'Aya',
+  accessToken: '',
+};
 
 const AuthProvider = (props: AuthProviderProps) => {
-    const { children } = props
-    const [state, dispatch] = useReducer(Reducer, initialState)
+  const { children } = props;
+  const [state, dispatch] = useReducer(Reducer, initialState);
 
-    return (
-        <Context.Provider value={{ state, dispatch }}>
-            {children}
-        </Context.Provider>
-    )
-}
+  return (
+    <Context.Provider value={{ state, dispatch }}>{children}</Context.Provider>
+  );
+};
 
-export const Context = createContext<AuthStore>({ state: initialState })
-export const useAuthContext = () => useContext(Context)
+export const Context = createContext<AuthStore>({ state: initialState });
+export const useAuthContext = () => useContext(Context);
 
-export default AuthProvider
+export default AuthProvider;

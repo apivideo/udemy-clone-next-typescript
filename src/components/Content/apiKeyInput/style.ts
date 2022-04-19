@@ -7,28 +7,21 @@ export const Wrapper = styled.div`
 
 export const Container = styled.div`
   background: url('/color-stroke.png'), #060c19;
-  padding: 0px 10%;
+  padding: 5%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   max-width: 1340px;
   margin: 0 auto;
   background-position: 50%;
   align-items: center;
   justify-content: space-between;
   position: relative;
-  height: 250px;
-  @media (max-width: 1000px) {
-    padding: 0px 50px;
-  }
-  @media (min-width: 1200px) {
+  height: auto;
+  gap: 20px;
+  @media (min-width: 700px) {
+    flex-direction: row;
     justify-content: center;
-    gap: 100px;
-  }
-  @media (max-width: 600px) {
-    padding: 0px 20px;
-  }
-  @media (max-width: 400px) {
-    padding: 0px 10px;
+    gap: 40px;
   }
 `;
 
@@ -37,20 +30,14 @@ export const Col1 = styled.div`
   flex-direction: column;
   gap: 5px;
   align-items: center;
-  @media (max-width: 600px) {
-    align-items: flex-start;
-  }
 `;
 export const Col2 = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-  width: 300px;
-  @media (max-width: 500px) {
-    width: 150px;
-  }
-  @media (max-width: 400px) {
-    width: 120px;
+  width: 250px;
+  @media (min-width: 500px) {
+    width: 300px;
   }
 `;
 
@@ -61,9 +48,6 @@ export const Title = styled.p`
   margin: 0;
   @media (max-width: 800px) {
     font-size: 30px;
-  }
-  @media (max-width: 600px) {
-    font-size: 20px;
   }
 `;
 
@@ -96,7 +80,6 @@ export const Button = styled.button`
   padding: 8px 16px;
   transition: all 0.2s ease-in-out;
   outline: none;
-  align-self: flex-end;
   gap: 5px;
   &:hover {
     filter: brightness(90%);
@@ -122,4 +105,10 @@ export const InputContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 20px;
+`;
+
+export const ButtonsContainer = styled.div`
+  display: flex;
+  align-self: flex-end;
+  gap: 10px;
 `;

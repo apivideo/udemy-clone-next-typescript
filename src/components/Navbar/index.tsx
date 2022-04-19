@@ -1,5 +1,11 @@
 import React from 'react';
-import { NavbarContainer, LogoContainer, Title, NameIcon } from './style';
+import {
+  NavbarContainer,
+  LogoContainer,
+  Title,
+  NameIcon,
+  NavItems,
+} from './style';
 import Logo from '@public/logo-udemy.svg';
 import LogoLight from '@public/logo-udemy-light.svg';
 import SearchBar from '@components/SearchBar';
@@ -13,17 +19,19 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ videoMode, video }): JSX.Element => {
   return (
     <NavbarContainer videoMode={videoMode}>
-      <LogoContainer href={'/'}>
-        {videoMode ? <LogoLight /> : <Logo />}
-      </LogoContainer>
-      {videoMode ? (
-        <Title>{video?.title}</Title>
-      ) : (
+      <NavItems>
+        <LogoContainer href={'/'}>
+          {videoMode ? <LogoLight /> : <Logo />}
+        </LogoContainer>
+        {videoMode ? (
+          <Title>{video?.title}</Title>
+        ) : (
           <>
             <span>Categories</span>
             <SearchBar />
           </>
         )}
+      </NavItems>
       {!videoMode && <NameIcon>API</NameIcon>}
     </NavbarContainer>
   );

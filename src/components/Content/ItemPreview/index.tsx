@@ -7,24 +7,36 @@ import {
   TitleContainer,
   Title,
   StyledProgress,
-  StyledIndicator
+  StyledIndicator,
 } from './style';
 import { BiPlay } from 'react-icons/bi';
 import Link from 'next/link';
 import { useAuthContext } from '@components/Providers/Auth';
-import { getVideoLastPaused } from '@utils/functions';
 interface ItemPreviewProps {
   video: Video;
 }
 
 const ItemPreview: React.FC<ItemPreviewProps> = ({ video }): JSX.Element => {
   const { state } = useAuthContext();
-  const [videoDuration, setVideoDuration] = useState<number>(0)
-  const [videoPaused, setVideoPaused] = useState<number>(0)
+  const [videoDuration, setVideoDuration] = useState<number>(0);
+  const [videoPaused, setVideoPaused] = useState<number>(0);
+  const [progress, setProgress] = useState<number>(0);
 
   useEffect(() => {
-    getVideoProgress()
-  }, [])
+    const abortController = new AbortController();
+    getVideoProgress();
+    return () => {
+      abortController.abort();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (videoPaused && videoDuration) {
+      // Get the progress precentage
+      const percent = (videoPaused / videoDuration) * 100;
+      setProgress(percent);
+    }
+  }, [videoDuration, videoPaused]);
 
   const getVideoProgress = async () => {
     // 1. Get video duration
@@ -39,27 +51,14 @@ const ItemPreview: React.FC<ItemPreviewProps> = ({ video }): JSX.Element => {
       }),
     });
     const result = await response.json();
-    setVideoDuration(result.metadata.duration)
+    setVideoDuration(result.metadata.duration);
 
-    // 2. Get video analytics
-    const analyticsResponse = await fetch(`/api/analytics`, {
-      method: 'Post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        apiKey: state.apiKey,
-        videoId: video.videoId,
-        metadata: { userName: state.userName },
-      }),
-    });
-    const { data } = await analyticsResponse.json();
-    if (data?.length) {
-
-      const pauseSeconds = getVideoLastPaused(data);
-      setVideoPaused(pauseSeconds)
+    // 2. Check if video's time saved in localStorage
+    const hasTime = localStorage.getItem(`time_${video.videoId}`);
+    if (hasTime) {
+      setVideoPaused(parseInt(hasTime));
     }
-  }
+  };
 
   return (
     <>
@@ -72,17 +71,14 @@ const ItemPreview: React.FC<ItemPreviewProps> = ({ video }): JSX.Element => {
             </PlayIcon>
           </ThumbnailContainer>
           <TitleContainer>
-            <Title>
-              {video.title}
-            </Title>
-            <StyledProgress value={videoPaused} max={videoDuration}>
-              <StyledIndicator style={{ width: `${videoPaused}%` }} />
+            <Title>{video.title}</Title>
+            <StyledProgress>
+              <StyledIndicator style={{ width: `${progress}%` }} />
             </StyledProgress>
           </TitleContainer>
         </Container>
       </Link>
     </>
-
   );
 };
 

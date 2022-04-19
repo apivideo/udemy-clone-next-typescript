@@ -19,11 +19,17 @@ export type Action =
 
 const Reducer = (state: AuthContext, action: Action) => {
   switch (action.type) {
-    case AuthActions.SET_API_KEY:
-    case AuthActions.SET_ACCESS_TOKEN: {
+    case AuthActions.SET_API_KEY: {
+      localStorage.setItem('api_key', JSON.stringify({ ...action.payload }));
       return { ...state, ...action.payload };
     }
-
+    case AuthActions.SET_ACCESS_TOKEN: {
+      localStorage.setItem(
+        'access_token',
+        JSON.stringify({ ...action.payload })
+      );
+      return { ...state, ...action.payload };
+    }
     default:
       console.error('Not among actions');
   }

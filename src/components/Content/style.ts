@@ -40,13 +40,13 @@ export const TextBox = styled.div`
 `;
 
 export const SelectionContainer = styled.div`
-  padding: 0px 80px;
+  padding: 0px 24px;
   max-width: 1340px;
-  margin: 0 auto;
+  margin: 0 50px;
 `;
 
 export const ItemsContainer = styled.div`
-  width: 90%;
+  width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
