@@ -1,4 +1,4 @@
-const config = require('../config/config');
+// const config = require('../config/config');
 const content = require("../content.json")
 const httpClient = require("axios");
 
@@ -9,8 +9,8 @@ const fetchSymblToken = async () => {
         const url = "https://api.symbl.ai/oauth2/token:generate";
     const data = {
         type: "application",
-        appId: config.SYMBL_APP_ID,
-        appSecret: config.SYMBL_APP_SECRET
+        appId: process.env.SYMBL_APP_ID,
+        appSecret: process.env.SYMBL_APP_SECRET
     };
     const response = await httpClient.post(url, data)
     const token = await response.data.accessToken

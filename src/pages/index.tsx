@@ -25,12 +25,12 @@ export default function Home() {
       setUserName(currentUserName)
     }
     getVideos(currentApiKey, currentUserName);
-    getAuthToken()
+    // getAuthToken()
   }, []);
 
   const getVideos = async (apiKey, userName) => {
     try {
-      const response = await fetch('api/content', {
+      const response = await fetch('api/videos', {
         method: 'Post',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ apiKey: apiKey }),
@@ -38,6 +38,7 @@ export default function Home() {
       const { data } = await response.json();
       dispatch({ type: AuthActions.SET_API_KEY, payload: { apiKey, userName: userName || state.userName } })
       setLoading(false)
+      getContent(data)
       setVideos(data);
     }
     catch (err) {
@@ -46,13 +47,16 @@ export default function Home() {
     }
   };
 
-  const getAuthToken = async () => {
-    const response = await fetch('api/auth', {
+  const getContent = async (data) => {
+    const response = await fetch('api/content', {
       method: 'Post',
       headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ videos: data }),
     });
-    const accessToken = await response.json()
-    dispatch({ type: AuthActions.SET_ACCESS_TOKEN, payload: accessToken })
+    const res = await response.json()
+    console.log('resssponse', res)
+
+    // dispatch({ type: AuthActions.SET_ACCESS_TOKEN, payload: accessToken })
   }
 
   const handleApiKey = (e) => {
