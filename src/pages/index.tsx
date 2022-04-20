@@ -36,7 +36,7 @@ export default function Home() {
         body: JSON.stringify({ apiKey: apiKey }),
       });
       const { data } = await response.json();
-      dispatch({ type: AuthActions.SET_API_KEY, payload: { apiKey, userName: userName || state.userName } })
+      dispatch({ type: AuthActions.SET_API_KEY, payload: { apiKey, userName: userName || 'Aya' } })
       setLoading(false)
       setVideos(data);
     }
