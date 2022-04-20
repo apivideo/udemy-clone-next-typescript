@@ -5,6 +5,7 @@ import ApiKeyInput from '@components/Content/apiKeyInput';
 import { useAuthContext } from '@components/Providers/Auth'
 import { AuthActions } from '@components/Providers/Auth/reducer';
 import Video from '@api.video/nodejs-client/lib/model/Video';
+import Footer from '@components/Footer'
 
 export default function Home() {
 
@@ -76,6 +77,7 @@ export default function Home() {
         setLoading={setLoading}
       />
       <Content videos={videos} />
+      <Footer />
     </>
   );
 }
