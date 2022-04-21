@@ -49,7 +49,6 @@ app.get('/api/insights/:videoId', (request, response) => {
 
 // get all videos when front-end loads first page
 app.post('/api/content', (request, response) => {
-    console.log('')
     const data = request.body.data;
     const db = data.reduce((db, video) => {
         const new_video = {
