@@ -83,12 +83,17 @@ export const ActionBtn = styled.button`
   border: none;
   height: 40px;
   width: 40px;
-  background: #000;
-  color: #fff;
+  background: #fff;
+  color: #000;
+  border: 1px solid black;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  &:hover{
+    background: #000;
+  color: #fff;
+  }
 `;
 
 export const NotesContent = styled(TabsPrimitive.Content)`

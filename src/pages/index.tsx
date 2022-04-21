@@ -5,6 +5,7 @@ import ApiKeyInput from '@components/Content/apiKeyInput';
 import { useAuthContext } from '@components/Providers/Auth'
 import { AuthActions } from '@components/Providers/Auth/reducer';
 import Video from '@api.video/nodejs-client/lib/model/Video';
+import Footer from '@components/Footer'
 
 export default function Home() {
 
@@ -36,7 +37,7 @@ export default function Home() {
         body: JSON.stringify({ apiKey: apiKey }),
       });
       const { data } = await response.json();
-      dispatch({ type: AuthActions.SET_API_KEY, payload: { apiKey, userName: userName || state.userName } })
+      dispatch({ type: AuthActions.SET_API_KEY, payload: { apiKey, userName: userName || 'Aya' } })
       setLoading(false)
       getContent(data)
       setVideos(data);
@@ -80,6 +81,7 @@ export default function Home() {
         setLoading={setLoading}
       />
       <Content videos={videos} />
+      <Footer />
     </>
   );
 }

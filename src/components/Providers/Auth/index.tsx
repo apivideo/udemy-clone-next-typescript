@@ -19,7 +19,7 @@ export interface AuthStore {
 
 const initialState: AuthContext = {
   apiKey: '',
-  userName: 'Aya',
+  userName: '',
   accessToken: '',
 };
 
