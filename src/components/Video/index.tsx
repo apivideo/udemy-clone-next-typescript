@@ -126,9 +126,9 @@ const VideoPage: React.FC = (): JSX.Element => {
       hideTitle: true,
       hidePoster: true,
     });
-    const hasTime = localStorage.getItem(`time_${videoData.videoId}`);
-    if (hasTime) {
-      player.setCurrentTime(parseInt(hasTime));
+    const storedTime = localStorage.getItem(`time_${videoData.videoId}`);
+    if (storedTime) {
+      player.setCurrentTime(parseInt(storedTime));
     }
     setPlayerSdk(player);
   };

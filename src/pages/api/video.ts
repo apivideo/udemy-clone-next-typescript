@@ -1,7 +1,7 @@
 import ApiVideoClient from '@api.video/nodejs-client';
 
 const handler = async (req, res) => {
-  const defaultApiKey = process.env.API_KEY;
+  const defaultApiKey = process.env.NEXT_PUBLIC_API_KEY;
 
   const { apiKey, videoId } = req.body;
   const apiKeyToApply = apiKey ? apiKey : defaultApiKey;

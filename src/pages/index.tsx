@@ -16,12 +16,12 @@ export default function Home() {
   const { state, dispatch } = useAuthContext()
 
   useEffect(() => {
-    const hasLocalStorage = localStorage.getItem('api_key')
+    const storedApiKey = localStorage.getItem('api_key')
     let currentApiKey = ''
     let currentUserName = ''
-    if (hasLocalStorage) {
-      currentApiKey = JSON.parse(hasLocalStorage).apiKey || ''
-      currentUserName = JSON.parse(hasLocalStorage).userName
+    if (storedApiKey) {
+      currentApiKey = JSON.parse(storedApiKey).apiKey || ''
+      currentUserName = JSON.parse(storedApiKey).userName
       setApiKey(currentApiKey)
       setUserName(currentUserName)
     }
@@ -34,10 +34,12 @@ export default function Home() {
       const response = await fetch('api/content', {
         method: 'Post',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ apiKey: apiKey }),
+        body: JSON.stringify({ apiKey }),
       });
       const { data } = await response.json();
-      dispatch({ type: AuthActions.SET_API_KEY, payload: { apiKey, userName: userName || 'Aya' } })
+      if (process.env.NEXT_PUBLIC_API_KEY !== apiKey) {
+        dispatch({ type: AuthActions.SET_API_KEY, payload: { apiKey, userName: userName || 'Aya' } })
+      }
       setLoading(false)
       setVideos(data);
     }

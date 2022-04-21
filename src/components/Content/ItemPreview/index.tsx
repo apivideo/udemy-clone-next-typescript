@@ -54,9 +54,9 @@ const ItemPreview: React.FC<ItemPreviewProps> = ({ video }): JSX.Element => {
     setVideoDuration(result.metadata.duration);
 
     // 2. Check if video's time saved in localStorage
-    const hasTime = localStorage.getItem(`time_${video.videoId}`);
-    if (hasTime) {
-      setVideoPaused(parseInt(hasTime));
+    const storedTime = localStorage.getItem(`time_${video.videoId}`);
+    if (storedTime) {
+      setVideoPaused(parseInt(storedTime));
     }
   };
 
