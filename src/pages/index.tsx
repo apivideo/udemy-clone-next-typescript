@@ -55,7 +55,7 @@ export default function Home() {
       body: JSON.stringify({ videos: data }),
     });
     const res = await response.json()
-    console.log('resssponse', res)
+    console.log('response', res)
 
     // dispatch({ type: AuthActions.SET_ACCESS_TOKEN, payload: accessToken })
   }
