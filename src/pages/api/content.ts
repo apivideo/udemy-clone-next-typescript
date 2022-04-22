@@ -2,8 +2,8 @@ import { updateContent } from '../../../server/services/updateContentDb.service'
 
 const handler = async (req, res) => {
   try {
-    const { videos } = req.body
-    const result = updateContent(videos)
+    const { data } = req.body
+    const result = updateContent(data)
     res.status(200).json({ result });
   }
   catch (err) {

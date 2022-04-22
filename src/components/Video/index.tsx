@@ -22,15 +22,13 @@ import {
   OverviewSummary,
 } from './style';
 import { PlayerSdk } from '@api.video/player-sdk';
-import {
-  getSecondsToHours,
-  getMinutesFormat,
-} from '@utils/functions';
+import { getSecondsToHours, getMinutesFormat } from '@utils/functions';
 import { MdEditNote } from 'react-icons/md';
 import { BsFillFileEarmarkTextFill } from 'react-icons/bs';
 import { IoCloseOutline } from 'react-icons/io5';
 import Notes from './Notes';
 import { useAuthContext } from '@components/Providers/Auth';
+import { AuthActions } from '@components/Providers/Auth/reducer';
 
 const tabNames = {
   OVERVIEW: 'Overview',
@@ -62,12 +60,38 @@ const VideoPage: React.FC = (): JSX.Element => {
   const [createNoteMode, setCreateNoteMode] = useState<boolean>(false);
   // [Symbl.ai]
   // const [conversationId, setConversationId] = useState<string>('');
-  const { state } = useAuthContext();
+  const { state, dispatch } = useAuthContext();
 
   useEffect(() => {
-    // Getting the video details and setting the player SDK
-    videoId && getVideoDetails();
+    const storedData = localStorage.getItem('api_key');
+    if (storedData) {
+      dispatch({
+        type: AuthActions.SET_API_KEY,
+        payload: {
+          apiKey: JSON.parse(storedData).apiKey,
+          userName: JSON.parse(storedData).userName,
+        },
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (videoId) {
+      // Getting the video details and setting the player SDK
+      getVideoDetails();
+      // Calling video insights
+      getVideoInsights();
+    }
   }, [videoId]);
+
+  const getVideoInsights = async () => {
+    const result = await fetch(
+      `http://localhost:3001/api/insights/${videoId}`,
+      { method: 'Get' }
+    );
+    const res = await result.json();
+    console.log('result', res);
+  };
 
   useEffect(() => {
     if (playerSdk) {
@@ -86,7 +110,7 @@ const VideoPage: React.FC = (): JSX.Element => {
           minutesFormat: getMinutesFormat(currentTime),
           seconds: currentTime,
         });
-        localStorage.setItem(`time_${videoId}`, currentTime);
+        localStorage.setItem(`time_${videoId}`, JSON.stringify(currentTime));
       });
     }
   }, [playerSdk]);

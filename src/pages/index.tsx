@@ -49,13 +49,14 @@ export default function Home() {
   };
 
   const getContent = async (data) => {
-    const response = await fetch('api/content', {
+    console.log(data)
+    const response = await fetch('http://localhost:3001/api/content', {
       method: 'Post',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ videos: data }),
+      body: JSON.stringify({ data }),
     });
-    const res = await response.json()
-    console.log('response', res)
+    // const res = await response.json()
+    console.log('response', response)
 
     // dispatch({ type: AuthActions.SET_ACCESS_TOKEN, payload: accessToken })
   }
