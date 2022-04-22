@@ -3,8 +3,11 @@ const content = require('../content.json');
 const Symbl = require("./processSymbl.service")
 
 function updateContent(videos) {
+    // Sorting videos so they are Always sorted by latest published video on top!! 
+    videos.sort(function (a, b) {
+        return new Date(b.date) - new Date(a.date);
+    });
     if (content.length > 0)
-    // ASSUMING THAT videos are Always sent sorted by publishedAt time with latest video on top!! 
     {
         if (new Date(content[0].publishedAt).getTime() !== new Date(videos[0].publishedAt).getTime()) {
             console.log("Updating...")
@@ -36,9 +39,7 @@ function updateContent(videos) {
     } else {
         console.log("Adding new videos")
         addVideos.addVideos(videos, content)
-        videos.sort(function (a, b) {
-            return new Date(b.date) - new Date(a.date);
-        });
+
         console.log("Update done")
     }
     Symbl.processSymbl()
