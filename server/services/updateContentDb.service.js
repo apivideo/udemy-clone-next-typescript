@@ -28,7 +28,6 @@ function updateContent(videos) {
         if (content.length === videos.length) {
             // this means that no more updates. All done
             console.log("Update completed")
-            return "Update done";
         }
         else {
             // some older video has been deleted
@@ -39,10 +38,10 @@ function updateContent(videos) {
     } else {
         console.log("Adding new videos")
         addVideos.addVideos(videos, content)
-
         console.log("Update done")
     }
     Symbl.processSymbl()
+    return "Update done";
 }
 
 
