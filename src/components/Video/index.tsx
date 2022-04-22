@@ -70,6 +70,7 @@ const VideoPage: React.FC = (): JSX.Element => {
   const [accessToken, setAccessToken] = useState<string>('');
   const [summary, setSummary] = useState<Array<Summary>>([]);
   const [transcription, setTranscription] = useState([]);
+  const [topics, setTopics] = useState([]);
 
   const { state, dispatch } = useAuthContext();
 
@@ -138,7 +139,7 @@ const VideoPage: React.FC = (): JSX.Element => {
     if (conversationId && accessToken) {
       getSummary();
       getTranscription();
-      // getTopics()
+      getTopics()
     }
   }, [conversationId, accessToken]);
 
@@ -216,15 +217,20 @@ const VideoPage: React.FC = (): JSX.Element => {
   };
 
   const getTopics = async () => {
+    console.log('getting topics')
     const response = await fetch(`/api/${conversationId}/get-topics`, {
       method: 'Get',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${state.accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     });
     const data = await response.json();
-    console.log('topics', data);
+    console.log('data', data)
+    if (data.length) {
+      setTopics(data)
+      console.log('tpics', data)
+    }
   };
 
   const getDuration = async () => {
@@ -275,7 +281,11 @@ const VideoPage: React.FC = (): JSX.Element => {
                       <IoCloseOutline size={'2rem'} />
                     </IconBtn>
                   </TranscriptTitle>
-                  <TranscriptContent>Coming soon!</TranscriptContent>
+                  <TranscriptContent>
+                    {transcription.map((item, i) => {
+                      return <span key={`t-${i}`}>{item.text}</span>;
+                    })}
+                  </TranscriptContent>
                 </MobileTranscriptContainer>
               )}
               <TabsContainer
@@ -301,7 +311,7 @@ const VideoPage: React.FC = (): JSX.Element => {
                         <OverviewSummary>
                           <h3>Summary</h3>
                           {summary.map((item, i) => {
-                            return <span key={i}>{item.text}</span>;
+                            return <span key={`s-${i}`}>{item.text}</span>;
                           })}
                         </OverviewSummary>
                       </>
@@ -330,7 +340,7 @@ const VideoPage: React.FC = (): JSX.Element => {
                 </TranscriptTitle>
                 <TranscriptContent>
                   {transcription.map((item, i) => {
-                    return <span>{item.text}</span>;
+                    return <span key={`t-${i}`}>{item.text}</span>;
                   })}
                 </TranscriptContent>
               </TranscriptContainer>
