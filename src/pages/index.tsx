@@ -57,8 +57,6 @@ export default function Home() {
     });
     // const res = await response.json()
     console.log('response', response)
-
-    // dispatch({ type: AuthActions.SET_ACCESS_TOKEN, payload: accessToken })
   }
 
   const handleApiKey = (e) => {

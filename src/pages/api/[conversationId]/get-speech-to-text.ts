@@ -12,7 +12,6 @@ const handler = async (req, res) => {
     }
     );
     const { messages } = result.data
-    console.log('transcriptionRes', messages)
      res.status(200).json(messages);
   } catch (err) {
     console.error(err)

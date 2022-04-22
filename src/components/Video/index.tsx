@@ -29,6 +29,7 @@ import { IoCloseOutline } from 'react-icons/io5';
 import Notes from './Notes';
 import { useAuthContext } from '@components/Providers/Auth';
 import { AuthActions } from '@components/Providers/Auth/reducer';
+import { access } from 'fs';
 
 const tabNames = {
   OVERVIEW: 'Overview',
@@ -42,6 +43,12 @@ export interface Timestamp {
 
 export interface Note {
   [key: string]: { note: string; seconds: number };
+}
+
+interface Summary {
+  id: string;
+  messageRefs: Array<{ id: string }>;
+  text: string;
 }
 
 const VideoPage: React.FC = (): JSX.Element => {
@@ -59,7 +66,11 @@ const VideoPage: React.FC = (): JSX.Element => {
   const [notesList, setNotesList] = useState<Note>(null);
   const [createNoteMode, setCreateNoteMode] = useState<boolean>(false);
   // [Symbl.ai]
-  // const [conversationId, setConversationId] = useState<string>('');
+  const [conversationId, setConversationId] = useState<string>('');
+  const [accessToken, setAccessToken] = useState<string>('');
+  const [summary, setSummary] = useState<Array<Summary>>([]);
+  const [transcription, setTranscription] = useState([]);
+
   const { state, dispatch } = useAuthContext();
 
   useEffect(() => {
@@ -81,6 +92,8 @@ const VideoPage: React.FC = (): JSX.Element => {
       getVideoDetails();
       // Calling video insights
       getVideoInsights();
+      // Generate symbl.ai access token
+      getAccessToken();
     }
   }, [videoId]);
 
@@ -90,7 +103,11 @@ const VideoPage: React.FC = (): JSX.Element => {
       { method: 'Get' }
     );
     const res = await result.json();
-    console.log('result', res);
+    console.log('status', res);
+    if (res.symbl_status === 'completed') {
+      console.log('conversationId', res.conversationId);
+      setConversationId(res.conversationId);
+    }
   };
 
   useEffect(() => {
@@ -115,14 +132,25 @@ const VideoPage: React.FC = (): JSX.Element => {
     }
   }, [playerSdk]);
 
-  // [Symbl.ai] Once our video details are set, we can process it with symbl.ai to get conversationId
-  // useEffect(() => {
-  // getConversationId()
-  // After we get the conversationId, we need to track the processing status with jobId, then we can use:
-  // getSummary()
-  // getTranscription()
-  // getTopics()
-  // }, [video]);
+  // [Symbl.ai]
+  useEffect(() => {
+    // If we have conversationId and accessToken, we can call the conversation api's
+    if (conversationId && accessToken) {
+      getSummary();
+      getTranscription();
+      // getTopics()
+    }
+  }, [conversationId, accessToken]);
+
+  const getAccessToken = async () => {
+    const result = await fetch(`/api/getAccessToken`, {
+      method: 'Get',
+    });
+    const { accessToken } = await result.json();
+    if (accessToken) {
+      setAccessToken(accessToken);
+    }
+  };
 
   const setPlayerTheme = () => {
     playerSdk.setTheme({
@@ -158,54 +186,46 @@ const VideoPage: React.FC = (): JSX.Element => {
   };
 
   // [Symbl.ai]
-  // const getConversationId = async () => {
-  //   const response = await fetch('/api/get-conversation-id', {
-  //     method: 'Post',
-  //     headers: { 'Content-Type': 'application/json' },
-  //     body: JSON.stringify({
-  //       videoUrl: video.assets.mp4,
-  //       accessToken: state.accessToken,
-  //     }),
-  //   });
-  //   const data = await response.json();
-  //   setConversationId(data.conversationId);
-  // };
+  const getSummary = async () => {
+    const response = await fetch(`/api/${conversationId}/get-summary`, {
+      method: 'Get',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    const data = await response.json();
+    if (data.length) {
+      setSummary(data);
+    }
+  };
 
-  // const getSummary = async () => {
-  //   const response = await fetch(`/api/${conversationId}/get-summary`, {
-  //     method: 'Get',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       Authorization: `Bearer ${state.accessToken}`,
-  //     },
-  //   });
-  //   const data = await response.json();
-  //   console.log('summary', data);
-  // };
+  const getTranscription = async () => {
+    const response = await fetch(`/api/${conversationId}/get-speech-to-text`, {
+      method: 'Get',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    const data = await response.json();
+    if (data.length) {
+      setTranscription(data);
+    }
+    console.log('transcription', data);
+  };
 
-  // const getTranscription = async () => {
-  //   const response = await fetch(`/api/${conversationId}/get-speech-to-text`, {
-  //     method: 'Get',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       Authorization: `Bearer ${state.accessToken}`,
-  //     },
-  //   });
-  //   const data = await response.json();
-  //   console.log('transcription', data);
-  // };
-
-  // const getTopics = async () => {
-  //   const response = await fetch(`/api/${conversationId}/get-topics`, {
-  //     method: 'Get',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       Authorization: `Bearer ${state.accessToken}`,
-  //     },
-  //   });
-  //   const data = await response.json();
-  //   console.log('topics', data);
-  // };
+  const getTopics = async () => {
+    const response = await fetch(`/api/${conversationId}/get-topics`, {
+      method: 'Get',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${state.accessToken}`,
+      },
+    });
+    const data = await response.json();
+    console.log('topics', data);
+  };
 
   const getDuration = async () => {
     const duration = await playerSdk.getDuration();
@@ -241,9 +261,11 @@ const VideoPage: React.FC = (): JSX.Element => {
                 <ActionBtn onClick={handleNote}>
                   <MdEditNote size={'2rem'} />
                 </ActionBtn>
-                <ActionBtn onClick={handleTranscript}>
-                  <BsFillFileEarmarkTextFill size={'2rem'} />
-                </ActionBtn>
+                {transcription && transcription.length ? (
+                  <ActionBtn onClick={handleTranscript}>
+                    <BsFillFileEarmarkTextFill size={'2rem'} />
+                  </ActionBtn>
+                ) : null}
               </ActionsContainer>
               {openSidebar && (
                 <MobileTranscriptContainer>
@@ -273,10 +295,17 @@ const VideoPage: React.FC = (): JSX.Element => {
                   <OverviewTitle>About this course</OverviewTitle>
                   <OverviewContent>
                     {`Duration: ${videoDuration && videoDuration} hours`}
-                    <OverviewSummary>
-                      <h3>Summary</h3>
-                      Coming soon!
-                    </OverviewSummary>
+
+                    {summary && summary.length ? (
+                      <>
+                        <OverviewSummary>
+                          <h3>Summary</h3>
+                          {summary.map((item, i) => {
+                            return <span key={i}>{item.text}</span>;
+                          })}
+                        </OverviewSummary>
+                      </>
+                    ) : null}
                   </OverviewContent>
                 </TabsContent>
                 <NotesContent value={tabNames.NOTES}>
@@ -299,7 +328,11 @@ const VideoPage: React.FC = (): JSX.Element => {
                     <IoCloseOutline size={'1.5rem'} />
                   </IconBtn>
                 </TranscriptTitle>
-                <TranscriptContent>Coming soon!</TranscriptContent>
+                <TranscriptContent>
+                  {transcription.map((item, i) => {
+                    return <span>{item.text}</span>;
+                  })}
+                </TranscriptContent>
               </TranscriptContainer>
             )}
           </Container>
