@@ -36,6 +36,9 @@ function updateContent(videos) {
     } else {
         console.log("Adding new videos")
         addVideos.addVideos(videos, content)
+        videos.sort(function (a, b) {
+            return new Date(b.date) - new Date(a.date);
+        });
         console.log("Update done")
     }
     Symbl.processSymbl()

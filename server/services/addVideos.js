@@ -1,6 +1,7 @@
 const fs = require("fs");
 function addVideos(videos_to_be_added, content) {
-    videos_to_be_added.forEach(video => {
+    if (videos_to_be_added) {
+        videos_to_be_added.forEach(video => {
         const content_object = {
             ...video,
             "conversationId": null,
@@ -14,6 +15,7 @@ function addVideos(videos_to_be_added, content) {
             console.log("Done writing"); // Success
         });
     })
+    }
     return;
 }
 
