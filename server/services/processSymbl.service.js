@@ -1,4 +1,3 @@
-const config = require('../config/config');
 const content = require("../content.json")
 const httpClient = require("axios");
 const process = require('process')
@@ -61,23 +60,23 @@ const wait = function (ms = 1000) {
 };
 
 const checkJobStatus = async (accessToken, jobId) => {
-  const url = `https://api.symbl.ai/v1/job/${jobId}`;
-  const axiosConfig = {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
-      'x-api-key': accessToken,
-    },
-  };
-  console.log('CHECKING JOB STATUS for', jobId);
-  try {
-    const response = await httpClient.get(url, axiosConfig);
-    const job_status = await response.data.status;
-    return job_status;
-  } catch (error) {
-    console.log('Error in getting job status - ', error);
-  }
-};
+    const url = `https://api.symbl.ai/v1/job/${jobId}`
+    const axiosConfig = {
+        'headers': {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+            'x-api-key': accessToken
+        }
+    }
+    console.log("CHECKING JOB STATUS for", jobId)
+    try {
+        const response = await httpClient.get(url, axiosConfig);
+        const job_status = await response.data.status;
+        return job_status;
+    } catch (error) {
+        console.log("Error in getting job status - ", error)
+    }
+}
 
 const processSymbl = async () => {
   console.log('Symbl Processing Starting...');
