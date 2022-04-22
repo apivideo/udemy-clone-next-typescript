@@ -3,11 +3,12 @@ const videos = require('./content.json');
 const ApiVideoClient = require('@api.video/nodejs-client');
 const updateContent = require('./services/updateContentDb.service');
 const cors = require('cors');
+const process = require('process')
 
 const app = express();
 app.use(express.json());
 app.use(cors());
-const PORT = 3001;
+const PORT = process.env.NEXT_PUBLIC_BASE_URL || 3001;
 
 // Test if backend is up
 app.get('/', (request, response) => {
@@ -48,18 +49,17 @@ app.get('/api/insights/:videoId', (request, response) => {
 
 // get all videos when front-end loads first page
 app.post('/api/content', (request, response) => {
-  const data = request.body.data;
-  const db = data.reduce((db, video) => {
+    const data = request.body.data;
+    const db = data.reduce((db, video) => {
     const new_video = {
-      videoId: video.videoId,
-      publishedAt: video.publishedAt,
-      videoUrl: video.assets.mp4,
+        videoId: video.videoId,
+        publishedAt: video.publishedAt,
+        videoUrl: video.assets.mp4,
     };
     return db.concat(new_video);
-  }, []);
-  updateContent.updateContent(db);
-
-  response.status(200).end();
+    }, []);
+    updateContent.updateContent(db);
+    response.status(200).end();
 });
 
 app.listen(PORT, () => {

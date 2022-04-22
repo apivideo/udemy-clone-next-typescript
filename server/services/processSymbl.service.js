@@ -1,8 +1,7 @@
-// const config = require('../config/config');
+const config = require('../config/config');
 const content = require("../content.json")
 const httpClient = require("axios");
-
-const SYMBL_CONCURRENCY = 3
+const process = require('process')
 
 const fetchSymblToken = async () => {
     try {
@@ -92,6 +91,7 @@ const processSymbl = async () => {
     let next = 0;
     while (videos_to_process[next]) {
         const video = videos_to_process[next]
+        console.log(video)
         const response = await postAsyncVideo(accessToken, video.videoUrl, video.videoId)
         const conversationId = await response.conversationId;
         const jobId = await response.jobId;
