@@ -1,6 +1,7 @@
 const config = require('../config/config');
-const content = require('../content.json');
-const httpClient = require('axios');
+const content = require("../content.json")
+const httpClient = require("axios");
+const process = require('process')
 
 const fetchSymblToken = async () => {
   try {
@@ -88,19 +89,16 @@ const processSymbl = async () => {
   // get Symbl Access Token
   const accessToken = await fetchSymblToken();
 
-  // we will process all videos one by one
-  let next = 0;
-  while (videos_to_process[next]) {
-    const video = videos_to_process[next];
-    const response = await postAsyncVideo(
-      accessToken,
-      video.videoUrl,
-      video.videoId
-    );
-    const conversationId = await response.conversationId;
-    const jobId = await response.jobId;
-    video.symbl_status = `${jobId} in_progress`;
-    video.conversationId = conversationId;
+    // we will process all videos one by one
+    let next = 0;
+    while (videos_to_process[next]) {
+        const video = videos_to_process[next]
+        console.log(video)
+        const response = await postAsyncVideo(accessToken, video.videoUrl, video.videoId)
+        const conversationId = await response.conversationId;
+        const jobId = await response.jobId;
+        video.symbl_status = `${jobId} in_progress`;
+        video.conversationId = conversationId
 
     // Wait for processing to be complete
     let validate = (result) =>
