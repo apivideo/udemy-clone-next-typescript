@@ -1,4 +1,3 @@
-const config = require('../config/config');
 const content = require("../content.json")
 const httpClient = require("axios");
 const process = require('process')
@@ -72,7 +71,7 @@ const checkJobStatus = async (accessToken, jobId) => {
     console.log("CHECKING JOB STATUS for", jobId)
     try {
         const response = await httpClient.get(url, axiosConfig);
-        const job_status = await response.data.status
+        const job_status = await response.data.status;
         return job_status;
     } catch (error) {
         console.log("Error in getting job status - ", error)
