@@ -1,4 +1,4 @@
-import { fetchSymblToken } from '../../../server/services/processSymbl.service';
+import { fetchSymblToken } from '../../services/processSymbl.service';
 
 const handler = async (req, res) => {
     try {

@@ -29,7 +29,7 @@ import { IoCloseOutline } from 'react-icons/io5';
 import Notes from './Notes';
 import { useAuthContext } from '@components/Providers/Auth';
 import { AuthActions } from '@components/Providers/Auth/reducer';
-import { access } from 'fs';
+import axios from 'axios'
 
 const tabNames = {
   OVERVIEW: 'Overview',
@@ -99,15 +99,12 @@ const VideoPage: React.FC = (): JSX.Element => {
   }, [videoId]);
 
   const getVideoInsights = async () => {
-    const result = await fetch(
-      `http://localhost:3001/api/insights/${videoId}`,
-      { method: 'Get' }
-    );
-    const res = await result.json();
-    console.log('status', res);
-    if (res.symbl_status === 'completed') {
-      console.log('conversationId', res.conversationId);
-      setConversationId(res.conversationId);
+    console.log('getting video insights', videoId)
+    const { data } = await axios.get(`/api/insights/${videoId}`);
+    console.log('result', data)
+    if (data.symbl_status === 'completed') {
+      console.log('conversationId', data.conversationId);
+      setConversationId(data.conversationId);
     }
   };
 

@@ -6,6 +6,7 @@ import { useAuthContext } from '@components/Providers/Auth'
 import { AuthActions } from '@components/Providers/Auth/reducer';
 import Video from '@api.video/nodejs-client/lib/model/Video';
 import Footer from '@components/Footer'
+import axios from 'axios'
 
 export default function Home() {
 
@@ -50,10 +51,8 @@ export default function Home() {
 
   const getContent = async (data) => {
     console.log(data)
-    const response = await fetch('http://localhost:3001/api/content', {
-      method: 'Post',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ data }),
+    const response = await axios.post('/api/content', {
+      data,
     });
     // const res = await response.json()
     console.log('response', response)

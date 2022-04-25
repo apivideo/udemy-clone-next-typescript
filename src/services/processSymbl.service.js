@@ -1,14 +1,13 @@
-const content = require("../content.json")
-const httpClient = require("axios");
-const process = require('process')
+const content = require('../db/content.json');
+const httpClient = require('axios');
 
 const fetchSymblToken = async () => {
   try {
     const url = 'https://api.symbl.ai/oauth2/token:generate';
     const data = {
       type: 'application',
-      appId: config.SYMBL_APP_ID,
-      appSecret: config.SYMBL_APP_SECRET,
+      appId: process.env.SYMBL_APP_ID,
+      appSecret: process.env.SYMBL_APP_SECRET,
     };
     const response = await httpClient.post(url, data);
     const token = await response.data.accessToken;
@@ -60,23 +59,23 @@ const wait = function (ms = 1000) {
 };
 
 const checkJobStatus = async (accessToken, jobId) => {
-    const url = `https://api.symbl.ai/v1/job/${jobId}`
-    const axiosConfig = {
-        'headers': {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-            'x-api-key': accessToken
-        }
-    }
-    console.log("CHECKING JOB STATUS for", jobId)
-    try {
-        const response = await httpClient.get(url, axiosConfig);
-        const job_status = await response.data.status;
-        return job_status;
-    } catch (error) {
-        console.log("Error in getting job status - ", error)
-    }
-}
+  const url = `https://api.symbl.ai/v1/job/${jobId}`;
+  const axiosConfig = {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+      'x-api-key': accessToken,
+    },
+  };
+  console.log('CHECKING JOB STATUS for', jobId);
+  try {
+    const response = await httpClient.get(url, axiosConfig);
+    const job_status = await response.data.status;
+    return job_status;
+  } catch (error) {
+    console.log('Error in getting job status - ', error);
+  }
+};
 
 const processSymbl = async () => {
   console.log('Symbl Processing Starting...');
@@ -88,16 +87,19 @@ const processSymbl = async () => {
   // get Symbl Access Token
   const accessToken = await fetchSymblToken();
 
-    // we will process all videos one by one
-    let next = 0;
-    while (videos_to_process[next]) {
-        const video = videos_to_process[next]
-        console.log(video)
-        const response = await postAsyncVideo(accessToken, video.videoUrl, video.videoId)
-        const conversationId = await response.conversationId;
-        const jobId = await response.jobId;
-        video.symbl_status = `${jobId} in_progress`;
-        video.conversationId = conversationId
+  // we will process all videos one by one
+  let next = 0;
+  while (videos_to_process[next]) {
+    const video = videos_to_process[next];
+    const response = await postAsyncVideo(
+      accessToken,
+      video.videoUrl,
+      video.videoId
+    );
+    const conversationId = await response.conversationId;
+    const jobId = await response.jobId;
+    video.symbl_status = `${jobId} in_progress`;
+    video.conversationId = conversationId;
 
     // Wait for processing to be complete
     let validate = (result) =>
