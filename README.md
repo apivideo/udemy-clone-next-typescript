@@ -96,6 +96,7 @@ Since 12.1, Next.js added support to the Next.js Compiler for [styled-components
 module.exports = {
 	compiler: {
 		styledComponents: true,
+  }
 },
 ```
 
