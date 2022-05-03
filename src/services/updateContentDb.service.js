@@ -1,13 +1,18 @@
-const addVideos = require('./addVideos');
-const content = require('../db/content.json');
-const Symbl = require('./processSymbl.service');
+import * as fs from 'fs';
+import path from 'path';
+import addVideos from './addVideos'
+import Symbl from './processSymbl.service'
+
+const content_file = fs.readFileSync('src/db/content.json');
+let content = JSON.parse(content_file)
 
 function updateContent(videos) {
   // Sorting videos so they are Always sorted by latest published video on top!!
   videos.sort(function (a, b) {
     return new Date(b.date) - new Date(a.date);
   });
-  if (content.length > 0) {
+
+  if (videos.length > 0 && content.length > 0) {
     if (
       new Date(content[0].publishedAt).getTime() !==
       new Date(videos[0].publishedAt).getTime()
@@ -20,7 +25,7 @@ function updateContent(videos) {
         const content_time = new Date(content[0].publishedAt).getTime();
         return video_time > content_time;
       });
-      addVideos.addVideos(videos_to_be_added, content);
+      addVideos.addVideos(videos_to_be_added, content); // actually adding the videos
     }
     // this means that we have caught up to latest videos
     // check if length is now equal
