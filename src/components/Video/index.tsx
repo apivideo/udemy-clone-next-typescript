@@ -20,6 +20,8 @@ import {
   TranscriptContent,
   MobileTranscriptContainer,
   OverviewSummary,
+  TopicsContainer,
+  TopicsOverview
 } from './style';
 import { PlayerSdk } from '@api.video/player-sdk';
 import { getSecondsToHours, getMinutesFormat } from '@utils/functions';
@@ -99,11 +101,8 @@ const VideoPage: React.FC = (): JSX.Element => {
   }, [videoId]);
 
   const getVideoInsights = async () => {
-    console.log('getting video insights', videoId)
     const { data } = await axios.get(`/api/insights/${videoId}`);
-    console.log('result', data)
     if (data.symbl_status === 'completed') {
-      console.log('conversationId', data.conversationId);
       setConversationId(data.conversationId);
     }
   };
@@ -210,11 +209,9 @@ const VideoPage: React.FC = (): JSX.Element => {
     if (data.length) {
       setTranscription(data);
     }
-    console.log('transcription', data);
   };
 
   const getTopics = async () => {
-    console.log('getting topics')
     const response = await fetch(`/api/${conversationId}/get-topics`, {
       method: 'Get',
       headers: {
@@ -223,10 +220,8 @@ const VideoPage: React.FC = (): JSX.Element => {
       },
     });
     const data = await response.json();
-    console.log('data', data)
     if (data.length) {
       setTopics(data)
-      console.log('tpics', data)
     }
   };
 
@@ -264,7 +259,7 @@ const VideoPage: React.FC = (): JSX.Element => {
                 <ActionBtn onClick={handleNote}>
                   <MdEditNote size={'2rem'} />
                 </ActionBtn>
-                {transcription && transcription.length ? (
+                {transcription?.length ? (
                   <ActionBtn onClick={handleTranscript}>
                     <BsFillFileEarmarkTextFill size={'2rem'} />
                   </ActionBtn>
@@ -302,16 +297,23 @@ const VideoPage: React.FC = (): JSX.Element => {
                   <OverviewTitle>About this course</OverviewTitle>
                   <OverviewContent>
                     {`Duration: ${videoDuration && videoDuration} hours`}
-
-                    {summary && summary.length ? (
-                      <>
+                    {topics?.length ? (
+                      <TopicsOverview>
+                      <h3>Topics</h3>
+                      <TopicsContainer>
+                        {topics.map((item, i) => {
+                          return <span key={`topic-${i}`}>{item.text}</span>;
+                        })}
+                        </TopicsContainer>
+                      </TopicsOverview>) : null
+                    }
+                    {summary?.length ? (
                         <OverviewSummary>
                           <h3>Summary</h3>
                           {summary.map((item, i) => {
                             return <span key={`s-${i}`}>{item.text}</span>;
                           })}
                         </OverviewSummary>
-                      </>
                     ) : null}
                   </OverviewContent>
                 </TabsContent>

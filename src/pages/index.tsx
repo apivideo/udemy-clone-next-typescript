@@ -27,7 +27,6 @@ export default function Home() {
       setUserName(currentUserName)
     }
     getVideos(currentApiKey, currentUserName);
-    // getAuthToken()
   }, []);
 
   const getVideos = async (apiKey, userName) => {
@@ -50,12 +49,9 @@ export default function Home() {
   };
 
   const getContent = async (data) => {
-    console.log(data)
     const response = await axios.post('/api/content', {
       data,
     });
-    // const res = await response.json()
-    console.log('response', response)
   }
 
   const handleApiKey = (e) => {

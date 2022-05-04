@@ -90,9 +90,9 @@ export const ActionBtn = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  &:hover{
+  &:hover {
     background: #000;
-  color: #fff;
+    color: #fff;
   }
 `;
 
@@ -168,4 +168,23 @@ export const OverviewSummary = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+`;
+
+export const TopicsOverview = styled.div`
+  margin-top: 20px;
+`;
+
+export const TopicsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  font-size: 14px;
+  color: grey;
+  padding-top: 10px;
+  gap: 5px;
+  flex-wrap: wrap;
+  span {
+    &:not(:last-child):after {
+      content: ' • ';
+    }
+  }
 `;
