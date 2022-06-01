@@ -12,7 +12,6 @@ const handler = async (req, res) => {
         }
         );
         const { topics } = result.data
-        console.log('topicsRes', topics)
         res.status(200).json(topics);
     } catch (err) {
         console.error(err)
