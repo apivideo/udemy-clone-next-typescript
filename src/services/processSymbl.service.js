@@ -1,10 +1,10 @@
 import * as fs from 'fs';
 import path from 'path';
-import httpClient from 'axios'
+import httpClient from 'axios';
 
 const dbDir = path.resolve(process.cwd(), 'src/db');
 const content_file = fs.readFileSync(`${dbDir}/content.json`);
-let content = JSON.parse(content_file)
+let content = JSON.parse(content_file);
 
 const fetchSymblToken = async () => {
   try {
@@ -105,13 +105,16 @@ const processSymbl = async () => {
     const jobId = await response.jobId;
     video.symbl_status = `${jobId} in_progress`;
     video.conversationId = conversationId;
-    content[video.videoId] = video
+    content[video.videoId] = video;
     fs.writeFileSync(
       `${dbDir}/content.json`,
       JSON.stringify(content),
       (err) => {
         if (err) throw err;
-        console.log('Error in updating Symbl "in progress" status to database for video Id', video.videoId);
+        console.log(
+          'Error in updating Symbl "in progress" status to database for video Id',
+          video.videoId
+        );
       }
     );
 
@@ -121,20 +124,20 @@ const processSymbl = async () => {
     let job_status = await poll(accessToken, jobId, validate, 3000); // loop executes for validate conditions
     console.log(`Job ${jobId}`, job_status);
     video.symbl_status = job_status;
-    content[video.videoId] = video
+    content[video.videoId] = video;
     fs.writeFileSync(
       `${dbDir}/content.json`,
       JSON.stringify(content),
       (err) => {
         if (err) throw err;
-        console.log('Error in updating Symbl "completed" status to database for video Id', video.videoId);
+        console.log(
+          'Error in updating Symbl "completed" status to database for video Id',
+          video.videoId
+        );
       }
     );
     next += 1;
   }
 };
 
-module.exports = {
-  processSymbl,
-  fetchSymblToken,
-};
+export default { processSymbl, fetchSymblToken };

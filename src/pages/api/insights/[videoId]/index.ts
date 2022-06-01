@@ -4,7 +4,7 @@ const handler = async (req, res) => {
     const { videoId } = req.query;
     const video = content.find((video) => video.videoId === videoId);
     if (video) {
-        let response_object = {
+        const response_object = {
             videoId: video.videoId,
             conversationId: video.conversationId,
             symbl_status: video.symbl_status,
