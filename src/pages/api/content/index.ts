@@ -11,7 +11,7 @@ const handler = async (req, res) => {
     };
     return db.concat(new_video);
   }, []);
-  updateContent.updateContent(db);
+  updateContent(db);
   res.status(200).end();
 };
 

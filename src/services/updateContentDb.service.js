@@ -49,6 +49,4 @@ function updateContent(videos) {
   return 'Update done';
 }
 
-module.exports = {
-  updateContent,
-};
+export default updateContent
