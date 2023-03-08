@@ -1,6 +1,6 @@
 <p align="center">
 <a  href="https://github.com/muxinc/stream.new">
-    <img src="https://github.com/apivideo/api.video-api-specification/blob/master/apivideo_banner.png?raw=true" alt="Api.video Logo" width="100%" >
+    <img src="https://github.com/apivideo/api.video-api-specification/blob/master/apivideo_banner.png?raw=true" alt="api.video Logo" width="100%" >
 </a>
 </p>
 <h1 align="center">Udemy clone with api.video + Next.js + Typescript 👩‍🎓</h1>
@@ -39,7 +39,7 @@ An open-source example application that allows users to create a learning plafor
 
 # About The Project
 
-### Api.video:
+### api.video:
 
 We'll recreate the video bookmark feature from Udemy and show a video progress using api.video's Node.js client and player SDK
 
